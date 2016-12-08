@@ -12,6 +12,27 @@
 
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.confluent.kafka.connect</groupId>
+            <artifactId>kafka-connect-cdc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>12c</id>
