@@ -17,9 +17,7 @@ package io.confluent.kafka.connect.cdc.xstream;
 
 import com.google.common.base.Strings;
 import io.confluent.kafka.connect.cdc.CDCSourceTask;
-import io.confluent.kafka.connect.cdc.xstream.schema.TableMetadataProvider;
 import oracle.jdbc.OracleConnection;
-import oracle.streams.ChunkColumnValue;
 import oracle.streams.ColumnValue;
 import oracle.streams.DDLLCR;
 import oracle.streams.LCR;
@@ -28,10 +26,7 @@ import oracle.streams.StreamsException;
 import oracle.streams.XStreamOut;
 import org.apache.kafka.common.utils.SystemTime;
 import org.apache.kafka.common.utils.Time;
-import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.errors.DataException;
-import org.apache.kafka.connect.errors.RetriableException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfig> implements Runnable {
@@ -49,8 +41,6 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
   OracleConnection xStreamOutConnection;
   Connection metadataConnection;
   XStreamOut xStreamOut;
-  SchemaGenerator schemaGenerator;
-  RecordConverter converter;
   String xStreamServerName;
   Time time = new SystemTime();
 
@@ -88,20 +78,6 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       }
     } catch (SQLException ex) {
       throw new ConnectException("Exception thrown while getting database metadata.", ex);
-    }
-
-    TableMetadataProvider tableMetadataProvider;
-
-    try {
-      tableMetadataProvider = TableMetadataProvider.get(this.metadataConnection);
-    } catch (SQLException ex) {
-      throw new ConnectException("Exception thrown while setting up tableMetadataProvider", ex);
-    }
-
-    try {
-      this.schemaGenerator = new SchemaGenerator(this.config, this.metadataConnection, tableMetadataProvider);
-    } catch (SQLException ex) {
-      throw new ConnectException("Exception thrown while setting up SchemaGenerator.", ex);
     }
 
     try {
@@ -195,7 +171,6 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
             }
 
 
-
           }
 
 //          if (rowLCR.hasChunkData()) {
@@ -222,8 +197,6 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
 //          }
 
 
-
-          SourceRecord sourceRecord = this.converter.convert(rowLCR);
 //          return Arrays.asList(sourceRecord);
         } else {
           throw new UnsupportedOperationException(
@@ -232,8 +205,8 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
         }
 
       }
-    } catch(StreamsException ex){
-      if(log.isErrorEnabled()){
+    } catch (StreamsException ex) {
+      if (log.isErrorEnabled()) {
         log.error("Exception thrown", ex);
       }
     }

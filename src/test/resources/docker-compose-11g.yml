@@ -1,0 +1,6 @@
+version: "2"
+services:
+  oracle11g:
+    image: docker.confluent.io:5000/oracle11g
+    ports:
+      - '1521'

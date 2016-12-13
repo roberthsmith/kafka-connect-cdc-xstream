@@ -1,0 +1,4 @@
+CREATE TABLE PRIMARY_KEY_TABLE (
+  user_id int PRIMARY KEY,
+  first_name VARCHAR(256)
+);

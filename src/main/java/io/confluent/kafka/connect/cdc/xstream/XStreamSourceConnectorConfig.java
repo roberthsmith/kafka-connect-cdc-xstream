@@ -34,7 +34,8 @@ public class XStreamSourceConnectorConfig extends CDCSourceConnectorConfig {
   public static final String XSTREAM_SERVER_NAMES_CONF = "xstream.server.names";
   public static final String XSTREAM_BATCH_INTERVAL_CONF = "xstream.batch.interval";
   public static final String XSTREAM_IDLE_TIMEOUT_CONF = "xstream.idle.timeout";
-
+  public static final String XSTREAM_RECEIVE_WAIT_CONF = "xstream.receive.wait.ms";
+  public static final String XSTREAM_ALLOWED_COMMANDS_CONF = "xstream.allowed.commands";
   static final String JDBC_USERNAME_DOC = "JDBC Username to connect to Oracle with.";
   static final String JDBC_PASSWORD_DOC = "JDBC Password to connect to Oracle with.";
   static final String JDBC_URL_DOC = "JDBC Url to connect to oracle with. You should not inline your username and password. " +
@@ -43,21 +44,16 @@ public class XStreamSourceConnectorConfig extends CDCSourceConnectorConfig {
   static final String XSTREAM_SERVER_NAMES_DOC = "Name of the XStream outbound servers.";
   static final String XSTREAM_BATCH_INTERVAL_DOC = "XStreamOut batch processing interval.";
   static final String XSTREAM_IDLE_TIMEOUT_DOC = "XStreamOut idle timeout value.";
-
+  static final String XSTREAM_RECEIVE_WAIT_DOC = "The amount of time to wait in milliseconds when XStreamOut.receiveLCR() returns null";
+  static final String XSTREAM_ALLOWED_COMMANDS_DOC = "The commands the task should process.";
+  static final int XSTREAM_RECEIVE_WAIT_DEFAULT = 1000;
+  static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE);
   public final String jdbcUrl;
   public final String jdbcUsername;
   public final String jdbcPassword;
   public final List<String> xStreamServerNames;
   public final int xStreamBatchInterval;
   public final int xStreamIdleTimeout;
-
-  public static final String XSTREAM_RECEIVE_WAIT_CONF = "xstream.receive.wait.ms";
-  public static final String XSTREAM_ALLOWED_COMMANDS_CONF = "xstream.allowed.commands";
-
-  static final String XSTREAM_RECEIVE_WAIT_DOC = "The amount of time to wait in milliseconds when XStreamOut.receiveLCR() returns null";
-  static final String XSTREAM_ALLOWED_COMMANDS_DOC = "The commands the task should process.";
-  static final int XSTREAM_RECEIVE_WAIT_DEFAULT = 1000;
-  static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE);
   public final int xStreamReceiveWait;
   public final Set<String> allowedCommands;
 
