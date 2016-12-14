@@ -1,0 +1,17 @@
+-- DECLARE
+--   tables  DBMS_UTILITY.UNCL_ARRAY;
+--   schemas DBMS_UTILITY.UNCL_ARRAY;
+-- BEGIN
+--   schemas(1) := 'CDC_TEST';
+--   tables(1) := NULL;
+--   DBMS_XSTREAM_ADM.CREATE_OUTBOUND(
+--       server_name     =>  'xout',
+--       source_database =>  'ORCLPDB1',
+--       table_names     =>  tables,
+--       schema_names    =>  schemas,
+--       connect_user    =>  'xstrmadmin',
+--       capture_user    =>  'xstrmadmin'
+--   );
+-- END;
+-- /
+--

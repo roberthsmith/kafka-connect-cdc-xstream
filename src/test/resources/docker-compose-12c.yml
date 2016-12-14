@@ -1,0 +1,13 @@
+version: "2"
+services:
+  oracle12c:
+    image: oracle/database:12.1.0.2-ee
+    environment:
+      ORACLE_SID: ORCL
+      ORACLE_PDB: ORCLPDB1
+      ORACLE_PWD: password
+    ports:
+      - '1521'
+      - '5500'
+#    volumes:
+#      - ./docker/12c:/docker-entrypoint-initdb.d

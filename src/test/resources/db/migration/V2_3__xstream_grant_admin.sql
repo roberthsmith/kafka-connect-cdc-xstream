@@ -1,0 +1,22 @@
+-- BEGIN
+--   DBMS_XSTREAM_AUTH.GRANT_ADMIN_PRIVILEGE(
+--       grantee                 => 'xstrmadmin',
+--       privilege_type          => 'CAPTURE',
+--       do_grants               => TRUE,
+--       grant_select_privileges => TRUE,
+--       container               => 'ALL'
+--   );
+-- END;
+-- /
+--
+-- BEGIN
+--   DBMS_XSTREAM_AUTH.GRANT_ADMIN_PRIVILEGE(
+--       grantee                 => 'xstrmadmin',
+--       privilege_type          => 'APPLY',
+--       do_grants               => TRUE,
+--       grant_select_privileges => TRUE,
+--       container               => 'ALL'
+--   );
+-- END;
+-- /
+--

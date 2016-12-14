@@ -48,7 +48,7 @@ public class OracleHealthCheck implements HealthCheck<Container> {
                 log.debug("Exception thrown", ex);
               }
 
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               return false;
             }
 
