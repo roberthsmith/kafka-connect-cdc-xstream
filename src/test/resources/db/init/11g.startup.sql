@@ -1,3 +1,5 @@
+SET ECHO ON;
+
 SHUTDOWN IMMEDIATE;
 STARTUP MOUNT;
 ALTER DATABASE ARCHIVELOG;
@@ -9,9 +11,15 @@ ALTER DATABASE OPEN;
 Configure Oracle XStream
  */
 
-CREATE USER xstrmadmin IDENTIFIED BY abc;
-ALTER USER xstrmadmin QUOTA UNLIMITED ON USERS;
 
+CREATE TABLESPACE xstream_tbs DATAFILE '/opt/oracle/app/product/11.2.0/dbhome_1/dbs/xstream_tbs.dbf'
+SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+
+CREATE USER xstrmadmin IDENTIFIED BY xstrmadmin
+DEFAULT TABLESPACE xstream_tbs
+QUOTA UNLIMITED ON xstream_tbs;
+
+GRANT CREATE SESSION TO xstrmadmin;
 GRANT SYSDBA TO xstrmadmin;
 GRANT DBA TO xstrmadmin;
 GRANT CONNECT TO xstrmadmin;
@@ -32,17 +40,24 @@ GRANT EXECUTE ON SYS.DBMS_CDC_PUBLISH TO xstrmadmin;
 GRANT CREATE ANY TRIGGER TO xstrmadmin;
 GRANT ALTER ANY TRIGGER TO xstrmadmin;
 GRANT DROP ANY TRIGGER TO xstrmadmin;
-ALTER USER xstrmadmin QUOTA UNLIMITED ON USERS;
 
-CONNECT SYS/oracle as SYSDBA
+-- BEGIN
+--   DBMS_XSTREAM_AUTH.GRANT_ADMIN_PRIVILEGE(
+--       grantee                 => 'xstrmadmin',
+--       privilege_type          => 'CAPTURE',
+--       grant_select_privileges => TRUE);
+-- END;
+-- /
+--
+-- BEGIN
+--   DBMS_XSTREAM_AUTH.GRANT_ADMIN_PRIVILEGE(
+--       grantee                 => 'xstrmadmin',
+--       privilege_type          => 'APPLY',
+--       grant_select_privileges => TRUE);
+-- END;
+-- /
 
-BEGIN
-  DBMS_STREAMS_AUTH.GRANT_ADMIN_PRIVILEGE(
-      grantee                 => 'xstrmadmin',
-      grant_privileges        => TRUE
-  );
-END;
-/
+exec dbms_streams_auth.grant_admin_privilege('xstrmadmin', true);
 
 DECLARE
   tables  DBMS_UTILITY.UNCL_ARRAY;

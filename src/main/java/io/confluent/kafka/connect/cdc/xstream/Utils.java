@@ -39,11 +39,16 @@ public class Utils {
   }
 
   public static void closeConnection(Connection connection) {
-    try {
-      connection.close();
-    } catch (SQLException ex) {
-      if (log.isErrorEnabled()) {
-        log.error("Exception thrown while calling metadataConnection.close", ex);
+    if (null != connection) {
+      if (log.isInfoEnabled()) {
+        log.info("closing connection.");
+      }
+      try {
+        connection.close();
+      } catch (SQLException ex) {
+        if (log.isErrorEnabled()) {
+          log.error("Exception thrown while calling metadataConnection.close", ex);
+        }
       }
     }
   }

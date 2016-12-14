@@ -1,6 +1,6 @@
 version: "2"
 services:
-  oracle12c:
+  oracle:
     image: oracle/database:12.1.0.2-ee
     environment:
       ORACLE_SID: ORCL

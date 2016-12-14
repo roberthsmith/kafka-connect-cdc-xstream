@@ -27,13 +27,13 @@ import oracle.streams.XStreamOut;
 import org.apache.kafka.common.utils.SystemTime;
 import org.apache.kafka.common.utils.Time;
 import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Map;
 
 public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfig> implements Runnable {
@@ -57,9 +57,11 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
 
   @Override
   public void start(Map<String, String> map) {
+    super.start(map);
+
     this.xStreamServerName = this.config.xStreamServerNames.get(0);
     if (log.isInfoEnabled()) {
-      log.info("Setting XStream server to {}", this.xStreamServerName);
+      log.info("Setting XStreamOut for this task to '{}'", this.xStreamServerName);
     }
 
     this.xStreamOutConnection = Utils.openConnection(this.config);
@@ -69,11 +71,13 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       DatabaseMetaData databaseMetaData = this.xStreamOutConnection.getMetaData();
 
       if (log.isInfoEnabled()) {
-        log.info("Driver loaded {}: Driver Name {} - Version {} Database Version {}",
+        log.info("Driver loaded {}: Driver Name {} - Version {} Database Version {}.{} ({})",
             this.xStreamOutConnection.getClass().getName(),
             databaseMetaData.getDriverName(),
             databaseMetaData.getDriverVersion(),
-            databaseMetaData.getDatabaseMajorVersion()
+            databaseMetaData.getDatabaseMajorVersion(),
+            databaseMetaData.getDatabaseMinorVersion(),
+            databaseMetaData.getDatabaseProductVersion()
         );
       }
     } catch (SQLException ex) {
@@ -110,17 +114,20 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       );
 
     } catch (StreamsException ex) {
+      if (ex.getCause() instanceof SQLFeatureNotSupportedException) {
+        throw new ConnectException("Please connect using the OCI(Thick) JDBC URI.", ex.getCause());
+      }
+
       throw new ConnectException("Exception thrown while setting up XStreamOut", ex);
     }
-
-//    this.converter = new RecordConverter(this, this.schemaGenerator, this.config, this.xStreamServerName);
-
   }
 
   @Override
   public void stop() {
     try {
-      this.xStreamOut.detach(XStreamOut.DEFAULT_MODE);
+      if (null != this.xStreamOut) {
+        this.xStreamOut.detach(XStreamOut.DEFAULT_MODE);
+      }
     } catch (StreamsException ex) {
       if (log.isErrorEnabled()) {
         log.error("Exception thrown while calling xStreamOut.detach", ex);
