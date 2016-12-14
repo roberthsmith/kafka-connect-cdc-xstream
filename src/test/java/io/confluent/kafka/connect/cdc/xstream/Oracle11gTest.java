@@ -35,7 +35,7 @@ public class Oracle11gTest {
     DockerComposeExecArgument execArgument = DockerComposeExecArgument.arguments(
         "bash",
         "-c",
-        "ORACLE_HOME=/opt/oracle/app/product/11.2.0/dbhome_1 ORACLE_SID=orcl /opt/oracle/app/product/11.2.0/dbhome_1/bin/sqlplus sys/oracle as sysdba @/db/init/11g.startup.sql"
+        "ORACLE_HOME=/opt/oracle/app/product/11.2.0/dbhome_1 ORACLE_SID=orcl /opt/oracle/app/product/11.2.0/dbhome_1/bin/sqlplus sys/oracle as sysdba @/db/init/11g/11g.startup.sql"
     );
     DockerComposeExecOption execOptions = DockerComposeExecOption.options("--user", "oracle");
 
