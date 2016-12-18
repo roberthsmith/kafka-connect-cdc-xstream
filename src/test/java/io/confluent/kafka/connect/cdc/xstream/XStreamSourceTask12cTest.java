@@ -16,8 +16,7 @@ import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Ignore
-public class XStreamSourceTask11gTest extends Oracle11gTest {
+public class XStreamSourceTask12cTest extends Oracle12cTest {
   XStreamSourceTask xStreamSourceTask;
 
   @Before

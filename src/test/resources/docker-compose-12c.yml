@@ -1,13 +1,13 @@
 version: "2"
 services:
   oracle:
-    image: oracle/database:12.1.0.2-ee
+    image: docker.confluent.io:5000/oracle12c
     environment:
       ORACLE_SID: ORCL
       ORACLE_PDB: ORCLPDB1
-      ORACLE_PWD: password
+      ORACLE_PWD: oracle
     ports:
       - '1521'
       - '5500'
-#    volumes:
-#      - ./docker/12c:/docker-entrypoint-initdb.d
+    volumes:
+      - './db/init:/db/init'

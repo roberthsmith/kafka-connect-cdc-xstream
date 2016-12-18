@@ -45,12 +45,6 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
   Time time = new SystemTime();
 
   @Override
-  public String version() {
-    return VersionUtil.getVersion();
-  }
-
-
-  @Override
   protected XStreamSourceConnectorConfig getConfig(Map<String, String> map) {
     return new XStreamSourceConnectorConfig(map);
   }

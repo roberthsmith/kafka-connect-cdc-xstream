@@ -23,6 +23,14 @@ class DockerUtils {
         .build();
   }
 
+  public static DockerComposeRule oracle12c() {
+    return DockerComposeRule.builder()
+        .file("src/test/resources/docker-compose-12c.yml")
+        .waitingForService(ORACLE_CONTAINER, new OracleHealthCheck(USERNAME, PASSWORD, ORACLE_INSTANCE))
+        .saveLogsTo("target/oracle12c")
+        .build();
+  }
+
   public static Container oracleContainer(DockerComposeRule docker) {
     return docker.containers().container(ORACLE_CONTAINER);
   }

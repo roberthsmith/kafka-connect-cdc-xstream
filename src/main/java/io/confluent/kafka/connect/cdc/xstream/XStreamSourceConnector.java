@@ -16,6 +16,7 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
 import com.google.common.base.Preconditions;
+import io.confluent.kafka.connect.cdc.CDCSourceConnector;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
@@ -25,14 +26,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XStreamSourceConnector extends SourceConnector {
+public class XStreamSourceConnector extends CDCSourceConnector {
   Map<String, String> settings;
   XStreamSourceConnectorConfig config;
-
-  @Override
-  public String version() {
-    return VersionUtil.getVersion();
-  }
 
   @Override
   public void start(Map<String, String> map) {

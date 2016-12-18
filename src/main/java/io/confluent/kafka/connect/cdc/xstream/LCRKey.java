@@ -44,7 +44,7 @@ class LCRKey implements Comparable<LCRKey> {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(LCRKey.class)
-        .add("sourceDatabaseName", this.sourceDatabaseName)
+        .add("schemaName", this.sourceDatabaseName)
         .add("objectOwner", this.objectOwner)
         .add("objectName", this.objectName)
         .toString();

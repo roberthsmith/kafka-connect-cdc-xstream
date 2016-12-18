@@ -20,17 +20,17 @@ class OracleChange implements Change {
   }
 
   @Override
-  public Map<String, ?> sourcePartition() {
+  public Map<String, Object> sourcePartition() {
     return null;
   }
 
   @Override
-  public Map<String, ?> sourceOffset() {
+  public Map<String, Object> sourceOffset() {
     return null;
   }
 
   @Override
-  public String sourceDatabaseName() {
+  public String schemaName() {
     return this.rowLCR.getSourceDatabaseName();
   }
 
@@ -73,4 +73,5 @@ class OracleChange implements Change {
   public long timestamp() {
     return this.rowLCR.getSourceTime().timestampValue().getTime();
   }
+
 }

@@ -50,3 +50,7 @@ export NEXUS_REPO_ID='ldap-jeremy'
 mvn deploy:deploy-file -DrepositoryId=$NEXUS_REPO_ID -Durl=$NEXUS_URL -DgeneratePom=true -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=12.1.0.2 -Dfile=oracle/instantclient_12_1/ojdbc6.jar
 mvn deploy:deploy-file -DrepositoryId=$NEXUS_REPO_ID -Durl=$NEXUS_URL -DgeneratePom=true -Dpackaging=jar -DgroupId=com.oracle -DartifactId=xstreams -Dversion=12.1.0.2 -Dfile=oracle/instantclient_12_1/xstreams.jar
 ```
+
+### Configure docker images
+
+#### Oracle 12c
