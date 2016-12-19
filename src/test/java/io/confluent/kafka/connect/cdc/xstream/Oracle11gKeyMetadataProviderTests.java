@@ -3,8 +3,8 @@ package io.confluent.kafka.connect.cdc.xstream;
 import com.google.common.collect.ImmutableSet;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertThat;
 
-@Ignore
+@Disabled
 public class Oracle11gKeyMetadataProviderTests extends Oracle11gTest {
   private static final Logger log = LoggerFactory.getLogger(Oracle11gKeyMetadataProviderTests.class);
 

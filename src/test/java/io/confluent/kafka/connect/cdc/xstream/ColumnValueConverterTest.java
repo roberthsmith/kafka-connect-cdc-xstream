@@ -13,7 +13,7 @@ import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Timestamp;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.sql.Blob;

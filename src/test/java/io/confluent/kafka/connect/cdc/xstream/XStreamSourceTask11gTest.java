@@ -3,11 +3,11 @@ package io.confluent.kafka.connect.cdc.xstream;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.source.SourceTaskContext;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
-import org.junit.After;
-import org.junit.AfterClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Ignore
+@Disabled
 public class XStreamSourceTask11gTest extends Oracle11gTest {
   XStreamSourceTask xStreamSourceTask;
 
@@ -39,18 +39,18 @@ public class XStreamSourceTask11gTest extends Oracle11gTest {
     this.xStreamSourceTask.start(settings);
   }
 
-  @Test(timeout = 60000)
+  @Test
   public void foo() {
 
   }
 
 
-  @After
+  @AfterEach
   public void stop() {
     this.xStreamSourceTask.stop();
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() {
     docker.after();
   }

@@ -1,26 +1,19 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
-import com.google.common.collect.ImmutableSet;
 import com.palantir.docker.compose.DockerComposeRule;
 import com.palantir.docker.compose.connection.Container;
 import com.palantir.docker.compose.connection.DockerPort;
-import com.palantir.docker.compose.connection.waiting.ClusterWait;
 import io.confluent.kafka.connect.cdc.xstream.docker.healthcheck.OracleHealthCheck;
 import org.flywaydb.core.Flyway;
-import org.hamcrest.core.IsEqual;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Set;
-
-import static org.junit.Assert.assertThat;
 
 public class Oracle12cKeyMetadataProviderTests {
   private static final Logger log = LoggerFactory.getLogger(Oracle12cKeyMetadataProviderTests.class);
@@ -93,7 +86,7 @@ public class Oracle12cKeyMetadataProviderTests {
 //    assertThat("actualKeys did not match.",  actualKeys, IsEqual.equalTo(expectedKeys));
 //  }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() {
     docker.after();
   }

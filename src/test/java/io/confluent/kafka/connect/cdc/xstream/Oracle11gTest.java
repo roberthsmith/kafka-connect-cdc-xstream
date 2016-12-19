@@ -5,8 +5,8 @@ import com.palantir.docker.compose.connection.Container;
 import com.palantir.docker.compose.execution.DockerComposeExecArgument;
 import com.palantir.docker.compose.execution.DockerComposeExecOption;
 import org.flywaydb.core.Flyway;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.ClassRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class Oracle11gTest {
   public static Container oracleContainer;
   public static String jdbcUrl;
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws SQLException, InterruptedException, IOException {
     oracleContainer = DockerUtils.oracleContainer(docker);
     jdbcUrl = DockerUtils.jdbcUrl(docker);
@@ -61,8 +61,8 @@ public class Oracle11gTest {
     flyway.migrate();
   }
 
-  @AfterClass
-  public static void afterClass() {
+  @AfterAll
+  public static void dockerCleanup() {
     docker.after();
   }
 }
