@@ -1,7 +1,6 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
 import io.confluent.kafka.connect.cdc.Change;
-import io.confluent.kafka.connect.cdc.ColumnValue;
 import oracle.streams.RowLCR;
 
 import java.util.List;

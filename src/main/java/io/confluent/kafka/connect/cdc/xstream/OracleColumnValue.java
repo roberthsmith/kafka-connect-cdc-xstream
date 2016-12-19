@@ -1,9 +1,9 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
-import io.confluent.kafka.connect.cdc.ColumnValue;
+import io.confluent.kafka.connect.cdc.Change;
 import org.apache.kafka.connect.data.Schema;
 
-class OracleColumnValue implements ColumnValue {
+class OracleColumnValue implements Change.ColumnValue {
   final String columnName;
   final Schema schema;
   final Object value;
