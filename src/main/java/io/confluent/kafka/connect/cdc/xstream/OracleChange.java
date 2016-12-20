@@ -29,8 +29,13 @@ class OracleChange implements Change {
   }
 
   @Override
-  public String schemaName() {
+  public String databaseName() {
     return this.rowLCR.getSourceDatabaseName();
+  }
+
+  @Override
+  public String schemaName() {
+    return this.rowLCR.getObjectOwner();
   }
 
   @Override
