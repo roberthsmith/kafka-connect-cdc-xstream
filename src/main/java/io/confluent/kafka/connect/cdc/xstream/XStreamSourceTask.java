@@ -85,18 +85,18 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
 
       byte[] position = null;
 
-      Map<String, Object> offsets = this.context.offsetStorageReader().offset(Position.partition);
-
-      if (null != offsets) {
-        String storedPosition = (String) offsets.get(this.xStreamServerName);
-
-        if (!Strings.isNullOrEmpty(storedPosition)) {
-          position = Position.toBytes(storedPosition);
-          if (log.isInfoEnabled()) {
-            log.info("Requesting position {} for XStream Out Server {}", position, this.xStreamServerName);
-          }
-        }
-      }
+//      Map<String, Object> offsets = this.context.offsetStorageReader().offset(Position.partition);
+//
+//      if (null != offsets) {
+//        String storedPosition = (String) offsets.get(this.xStreamServerName);
+//
+//        if (!Strings.isNullOrEmpty(storedPosition)) {
+//          position = Position.toBytes(storedPosition);
+//          if (log.isInfoEnabled()) {
+//            log.info("Requesting position {} for XStream Out Server {}", position, this.xStreamServerName);
+//          }
+//        }
+//      }
 
       this.xStreamOut = XStreamOut.attach(
           this.xStreamOutConnection,
@@ -128,8 +128,8 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       }
     }
 
-    Utils.closeConnection(this.xStreamOutConnection);
-    Utils.closeConnection(this.metadataConnection);
+//    Utils.closeConnection(this.xStreamOutConnection);
+//    Utils.closeConnection(this.metadataConnection);
   }
 
   @Override
@@ -163,10 +163,11 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
 //          this.schemaGenerator.invalidate(lcr);
           continue;
         } else if (lcr instanceof RowLCR) {
-          RowLCR rowLCR = (RowLCR) lcr;
-          OracleChange change = new OracleChange(rowLCR);
+          RowLCR row = (RowLCR) lcr;
+//          OracleChange.Builder builder = OracleChange.builder();
+//          OracleChange change = builder.build(row);
 
-          for (ColumnValue columnValue : rowLCR.getNewValues()) {
+          for (ColumnValue columnValue : row.getNewValues()) {
             if (log.isDebugEnabled()) {
               log.debug("Processing ColumnValue for column {}", columnValue.getColumnName());
             }

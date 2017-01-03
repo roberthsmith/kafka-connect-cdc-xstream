@@ -24,8 +24,8 @@ public class XStreamSourceTask11gTest extends Oracle11gTest {
   public void before() {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, DockerUtils.XSTREAM_USERNAME,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, DockerUtils.XSTREAM_PASSWORD,
+        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, Constants.XSTREAM_USERNAME_12C,
+        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, Constants.XSTREAM_PASSWORD_12C,
         XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
     );
 

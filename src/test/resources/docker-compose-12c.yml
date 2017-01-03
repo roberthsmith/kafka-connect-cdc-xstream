@@ -1,13 +1,12 @@
 version: "2"
 services:
   oracle:
-    image: docker.confluent.io:5000/oracle12c
+    image: oracle/database:12.1.0.2-ee-xstream
     environment:
       ORACLE_SID: ORCL
       ORACLE_PDB: ORCLPDB1
       ORACLE_PWD: oracle
     ports:
       - '1521'
-      - '5500'
     volumes:
       - './db/init:/db/init'

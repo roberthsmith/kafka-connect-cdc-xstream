@@ -16,6 +16,7 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
 import io.confluent.kafka.connect.cdc.CDCSourceConnectorConfig;
+import io.confluent.kafka.connect.cdc.JdbcCDCSourceConnectorConfig;
 import oracle.streams.RowLCR;
 import oracle.streams.XStreamOut;
 import org.apache.kafka.common.config.ConfigDef;
@@ -26,21 +27,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class XStreamSourceConnectorConfig extends CDCSourceConnectorConfig {
+public class XStreamSourceConnectorConfig extends JdbcCDCSourceConnectorConfig {
 
-  public static final String JDBC_USERNAME_CONF = "jdbc.username";
-  public static final String JDBC_PASSWORD_CONF = "jdbc.password";
-  public static final String JDBC_URL_CONF = "jdbc.url";
+
   public static final String XSTREAM_SERVER_NAMES_CONF = "xstream.server.names";
   public static final String XSTREAM_BATCH_INTERVAL_CONF = "xstream.batch.interval";
   public static final String XSTREAM_IDLE_TIMEOUT_CONF = "xstream.idle.timeout";
   public static final String XSTREAM_RECEIVE_WAIT_CONF = "xstream.receive.wait.ms";
   public static final String XSTREAM_ALLOWED_COMMANDS_CONF = "xstream.allowed.commands";
-  static final String JDBC_USERNAME_DOC = "JDBC Username to connect to Oracle with.";
-  static final String JDBC_PASSWORD_DOC = "JDBC Password to connect to Oracle with.";
-  static final String JDBC_URL_DOC = "JDBC Url to connect to oracle with. You should not inline your username and password. " +
-      " This will show up in the logs. Use " + JDBC_USERNAME_CONF + " and " + JDBC_PASSWORD_CONF + "." +
-      " You must connect using the Oracle OCI (thick) driver.";
   static final String XSTREAM_SERVER_NAMES_DOC = "Name of the XStream outbound servers.";
   static final String XSTREAM_BATCH_INTERVAL_DOC = "XStreamOut batch processing interval.";
   static final String XSTREAM_IDLE_TIMEOUT_DOC = "XStreamOut idle timeout value.";
@@ -48,9 +42,6 @@ public class XStreamSourceConnectorConfig extends CDCSourceConnectorConfig {
   static final String XSTREAM_ALLOWED_COMMANDS_DOC = "The commands the task should process.";
   static final int XSTREAM_RECEIVE_WAIT_DEFAULT = 1000;
   static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE);
-  public final String jdbcUrl;
-  public final String jdbcUsername;
-  public final String jdbcPassword;
   public final List<String> xStreamServerNames;
   public final int xStreamBatchInterval;
   public final int xStreamIdleTimeout;
@@ -62,21 +53,15 @@ public class XStreamSourceConnectorConfig extends CDCSourceConnectorConfig {
 
     this.xStreamReceiveWait = this.getInt(XSTREAM_RECEIVE_WAIT_CONF);
     this.allowedCommands = new HashSet<>(this.getList(XSTREAM_ALLOWED_COMMANDS_CONF));
-    this.jdbcUrl = this.getString(JDBC_URL_CONF);
-    this.jdbcUsername = this.getString(JDBC_USERNAME_CONF);
-    this.jdbcPassword = this.getPassword(JDBC_PASSWORD_CONF).value();
     this.xStreamServerNames = this.getList(XSTREAM_SERVER_NAMES_CONF);
     this.xStreamBatchInterval = this.getInt(XSTREAM_BATCH_INTERVAL_CONF);
     this.xStreamIdleTimeout = this.getInt(XSTREAM_IDLE_TIMEOUT_CONF);
   }
 
   public static ConfigDef config() {
-    return CDCSourceConnectorConfig.config()
+    return JdbcCDCSourceConnectorConfig.config()
         .define(XSTREAM_RECEIVE_WAIT_CONF, ConfigDef.Type.INT, XSTREAM_RECEIVE_WAIT_DEFAULT, ConfigDef.Importance.LOW, XSTREAM_RECEIVE_WAIT_DOC)
         .define(XSTREAM_ALLOWED_COMMANDS_CONF, ConfigDef.Type.LIST, XSTREAM_ALLOWED_COMMANDS_DEFAULT, ConfigDef.Importance.LOW, XSTREAM_ALLOWED_COMMANDS_DOC)
-        .define(JDBC_URL_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, JDBC_URL_DOC)
-        .define(JDBC_USERNAME_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, JDBC_USERNAME_DOC)
-        .define(JDBC_PASSWORD_CONF, ConfigDef.Type.PASSWORD, ConfigDef.Importance.HIGH, JDBC_PASSWORD_DOC)
         .define(XSTREAM_SERVER_NAMES_CONF, ConfigDef.Type.LIST, ConfigDef.Importance.HIGH, XSTREAM_SERVER_NAMES_DOC)
         .define(XSTREAM_BATCH_INTERVAL_CONF, ConfigDef.Type.INT, XStreamOut.DEFAULT_BATCH_INTERVAL, ConfigDef.Importance.MEDIUM, XSTREAM_BATCH_INTERVAL_DOC)
         .define(XSTREAM_IDLE_TIMEOUT_CONF, ConfigDef.Type.INT, XStreamOut.DEFAULT_IDLE_TIMEOUT, ConfigDef.Importance.MEDIUM, XSTREAM_IDLE_TIMEOUT_DOC);

@@ -15,7 +15,8 @@
  */
 package io.confluent.kafka.connect.cdc.xstream;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class XStreamSourceConnectorTest {
   public XStreamSourceConnector xStreamSourceConnector;
   Map<String, String> settings;
 
-  @Before
+  @BeforeEach
   public void setup() {
     this.xStreamSourceConnector = new XStreamSourceConnector();
     this.settings = XStreamSourceConnectorConfigTest.settings();

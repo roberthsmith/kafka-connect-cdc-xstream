@@ -12,10 +12,10 @@ Configure Oracle XStream
  */
 
 
-CREATE TABLESPACE xstream_tbs DATAFILE '/opt/oracle/app/product/11.2.0/dbhome_1/dbs/xstream_tbs.dbf'
+CREATE TABLESPACE xstream_tbs DATAFILE 'xstream_tbs.dbf'
 SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
 
-CREATE USER xstrmadmin IDENTIFIED BY xstrmadmin
+CREATE USER xstrmadmin IDENTIFIED BY lfnjgksdfbdk
 DEFAULT TABLESPACE xstream_tbs
 QUOTA UNLIMITED ON xstream_tbs;
 

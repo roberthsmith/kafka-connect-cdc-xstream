@@ -24,8 +24,9 @@ public class Oracle11gTest {
 
   @BeforeAll
   public static void beforeClass() throws SQLException, InterruptedException, IOException {
+    docker.before();
     oracleContainer = DockerUtils.oracleContainer(docker);
-    jdbcUrl = DockerUtils.jdbcUrl(docker);
+    jdbcUrl = DockerUtils.jdbcUrl(docker, Constants.JDBC_URL_FORMAT_11G);
 
     configureOracleLogging();
     flywayMigrate();
@@ -56,8 +57,16 @@ public class Oracle11gTest {
 
   static void flywayMigrate() throws SQLException {
     Flyway flyway = new Flyway();
-    flyway.setDataSource(jdbcUrl, DockerUtils.USERNAME, DockerUtils.PASSWORD);
+    flyway.setDataSource(jdbcUrl, Constants.USERNAME, Constants.PASSWORD);
     flyway.setSchemas("CDC_TESTING");
+
+//    if(log.isDebugEnabled()) {
+//      log.debug("locations {}", Joiner.on(",").join(flyway.getLocations()));
+//    }
+
+    flyway.setLocations("db/migration/common", "db/migration/oracle11g");
+
+
     flyway.migrate();
   }
 
