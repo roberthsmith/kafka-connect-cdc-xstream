@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.mock;
 
 @Category(Integration.class)
-@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class Oracle12cTableMetadataProviderTests extends Oracle12cTests {
+@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class Oracle12cTableMetadataProviderTest extends Oracle12cTest {
   Oracle12cTableMetadataProvider tableMetadataProvider;
   XStreamSourceConnectorConfig config;
   OffsetStorageReader offsetStorageReader;

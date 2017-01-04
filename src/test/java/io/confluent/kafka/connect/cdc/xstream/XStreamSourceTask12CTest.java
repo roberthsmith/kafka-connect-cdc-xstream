@@ -40,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Category(Integration.class)
-@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class XStreamSourceTask12CTests extends Oracle12cTests {
-  private static Logger log = LoggerFactory.getLogger(XStreamSourceTask12CTests.class);
+@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class XStreamSourceTask12CTest extends Oracle12cTest {
+  private static Logger log = LoggerFactory.getLogger(XStreamSourceTask12CTest.class);
   XStreamSourceConnectorConfig config;
   OracleConnection oracleConnection;
   XStreamOutput xStreamOutput;
@@ -157,7 +157,7 @@ public class XStreamSourceTask12CTests extends Oracle12cTests {
     }
 
     List<TestCase> testCases = new ArrayList<>(rowLCRs.size());
-    List<OracleChangeTests.ChangeTestCase> changeTestCases = new ArrayList<>();
+    List<OracleChangeTest.ChangeTestCase> changeTestCases = new ArrayList<>();
 
 
     for (ChangeKey changeKey : rowLCRs.keySet()) {
@@ -179,7 +179,7 @@ public class XStreamSourceTask12CTests extends Oracle12cTests {
         testCase.expectedJsonLCR = expectedJsonLCR;
         testCase.name = parentPath.relativize(testCase.lcrPath).toString();
 
-        OracleChangeTests.ChangeTestCase changeTestCase = new OracleChangeTests.ChangeTestCase();
+        OracleChangeTest.ChangeTestCase changeTestCase = new OracleChangeTest.ChangeTestCase();
         changeTestCase.inputRowLCR = expectedJsonLCR;
         changeTestCase.name = parentPath.relativize(testCase.lcrPath).toString();
         changeTestCase.inputTableMetadata = new JsonTableMetadata();

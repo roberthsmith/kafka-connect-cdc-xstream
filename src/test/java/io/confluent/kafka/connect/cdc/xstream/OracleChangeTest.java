@@ -51,9 +51,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(Integration.class)
-@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class OracleChangeTests extends Oracle12cTests {
-  private static final Logger log = LoggerFactory.getLogger(OracleChangeTests.class);
+@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class OracleChangeTest extends Oracle12cTest {
+  private static final Logger log = LoggerFactory.getLogger(OracleChangeTest.class);
 
   Connection connection;
 

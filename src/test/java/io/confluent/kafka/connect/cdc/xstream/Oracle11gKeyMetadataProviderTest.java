@@ -13,8 +13,8 @@ import java.sql.SQLException;
 
 @Disabled
 @Category(Integration.class)
-public class Oracle11gKeyMetadataProviderTests extends Oracle11gTests {
-  private static final Logger log = LoggerFactory.getLogger(Oracle11gKeyMetadataProviderTests.class);
+public class Oracle11gKeyMetadataProviderTest extends Oracle11gTest {
+  private static final Logger log = LoggerFactory.getLogger(Oracle11gKeyMetadataProviderTest.class);
 
   Connection connection;
 

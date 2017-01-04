@@ -1,11 +1,11 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
 import com.google.common.collect.ImmutableMap;
+import io.confluent.kafka.connect.cdc.docker.DockerFormatString;
 import org.apache.kafka.connect.source.SourceTaskContext;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
-import org.junit.Before;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +17,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Disabled
-public class XStreamSourceTask11GTests extends Oracle11gTests {
+public class XStreamSourceTask11GTest extends Oracle11gTest {
   XStreamSourceTask xStreamSourceTask;
 
-  @AfterAll
-  public static void afterClass() {
-    docker.after();
-  }
-
-  @Before
-  public void before() {
+  @BeforeEach
+  public void before(
+      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_11G) String jdbcUrl
+  ) {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
         XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
