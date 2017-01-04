@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class Oracle12cTest {
+public class Oracle12cTests {
   public static final String DOCKER_COMPOSE_FILE = "src/test/resources/docker-compose-12c.yml";
   public static final Class<? extends ClusterHealthCheck> CLUSTER_HEALTH_CHECK_CLASS = Oracle12cClusterHealthCheck.class;
-  private static final Logger log = LoggerFactory.getLogger(Oracle12cTest.class);
+  private static final Logger log = LoggerFactory.getLogger(Oracle12cTests.class);
 
   @BeforeAll
   public static void beforeClass(

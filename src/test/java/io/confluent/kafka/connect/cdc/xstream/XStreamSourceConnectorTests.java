@@ -24,14 +24,14 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class XStreamSourceConnectorTest {
+public class XStreamSourceConnectorTests {
   public XStreamSourceConnector xStreamSourceConnector;
   Map<String, String> settings;
 
   @BeforeEach
   public void setup() {
     this.xStreamSourceConnector = new XStreamSourceConnector();
-    this.settings = XStreamSourceConnectorConfigTest.settings();
+    this.settings = XStreamSourceConnectorConfigTests.settings();
   }
 
   @Test

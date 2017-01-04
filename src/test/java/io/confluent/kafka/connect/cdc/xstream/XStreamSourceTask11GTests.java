@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Disabled
-public class XStreamSourceTask11gTest extends Oracle11gTest {
+public class XStreamSourceTask11GTests extends Oracle11gTests {
   XStreamSourceTask xStreamSourceTask;
 
   @AfterAll

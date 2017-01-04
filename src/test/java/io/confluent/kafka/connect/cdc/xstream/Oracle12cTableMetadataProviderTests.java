@@ -2,6 +2,7 @@ package io.confluent.kafka.connect.cdc.xstream;
 
 import com.google.common.collect.ImmutableMap;
 import io.confluent.kafka.connect.cdc.ChangeKey;
+import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.TableMetadataProvider;
 import io.confluent.kafka.connect.cdc.TestDataUtils;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
@@ -9,6 +10,7 @@ import io.confluent.kafka.connect.cdc.docker.DockerFormatString;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
 import io.confluent.kafka.connect.cdc.xstream.model.TableMetadataTestCase;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
+import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -24,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.mock;
 
-//@Disabled
-@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class Oracle12cTableMetadataProviderTests extends Oracle12cTest {
+@Category(Integration.class)
+@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class Oracle12cTableMetadataProviderTests extends Oracle12cTests {
   Oracle12cTableMetadataProvider tableMetadataProvider;
   XStreamSourceConnectorConfig config;
   OffsetStorageReader offsetStorageReader;

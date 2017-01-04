@@ -3,6 +3,7 @@ package io.confluent.kafka.connect.cdc.xstream;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
+import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JsonChange;
 import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.NamedTest;
@@ -16,6 +17,7 @@ import io.confluent.kafka.connect.cdc.xstream.model.TableMetadataTestCase;
 import oracle.streams.ChunkColumnValue;
 import oracle.streams.RowLCR;
 import oracle.streams.StreamsException;
+import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -48,8 +50,9 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class OracleChangeTests extends Oracle12cTest {
+@Category(Integration.class)
+@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class OracleChangeTests extends Oracle12cTests {
   private static final Logger log = LoggerFactory.getLogger(OracleChangeTests.class);
 
   Connection connection;

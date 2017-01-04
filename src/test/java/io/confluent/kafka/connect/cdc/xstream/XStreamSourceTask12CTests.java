@@ -5,6 +5,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import io.confluent.kafka.connect.cdc.ChangeKey;
+import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
 import io.confluent.kafka.connect.cdc.docker.DockerFormatString;
@@ -16,6 +17,7 @@ import oracle.streams.LCR;
 import oracle.streams.RowLCR;
 import oracle.streams.StreamsException;
 import oracle.streams.XStreamOut;
+import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -37,9 +39,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-@DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class XStreamSourceTask12cTest extends Oracle12cTest {
-  private static Logger log = LoggerFactory.getLogger(XStreamSourceTask12cTest.class);
+@Category(Integration.class)
+@DockerCompose(dockerComposePath = Oracle12cTests.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
+public class XStreamSourceTask12CTests extends Oracle12cTests {
+  private static Logger log = LoggerFactory.getLogger(XStreamSourceTask12CTests.class);
   XStreamSourceConnectorConfig config;
   OracleConnection oracleConnection;
   XStreamOutput xStreamOutput;

@@ -1,5 +1,7 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
+import io.confluent.kafka.connect.cdc.Integration;
+import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,7 +12,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Disabled
-public class Oracle11gKeyMetadataProviderTests extends Oracle11gTest {
+@Category(Integration.class)
+public class Oracle11gKeyMetadataProviderTests extends Oracle11gTests {
   private static final Logger log = LoggerFactory.getLogger(Oracle11gKeyMetadataProviderTests.class);
 
   Connection connection;

@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class Oracle11gTest {
-  private static final Logger log = LoggerFactory.getLogger(Oracle11gTest.class);
+public class Oracle11gTests {
+  private static final Logger log = LoggerFactory.getLogger(Oracle11gTests.class);
 
   @BeforeAll
   public static void beforeClass(@DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_11G) String jdbcUrl) throws SQLException, InterruptedException, IOException {
