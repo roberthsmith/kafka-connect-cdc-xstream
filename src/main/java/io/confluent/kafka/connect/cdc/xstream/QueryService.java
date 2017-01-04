@@ -3,15 +3,11 @@ package io.confluent.kafka.connect.cdc.xstream;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import io.confluent.kafka.connect.cdc.JdbcUtils;
 import oracle.jdbc.OracleConnection;
-import oracle.streams.LCR;
-import oracle.streams.RowLCR;
 import oracle.streams.XStreamOut;
 import org.apache.kafka.common.utils.SystemTime;
 import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.SQLException;
 
 class QueryService extends AbstractExecutionThreadService {
   private static final Logger log = LoggerFactory.getLogger(QueryService.class);
@@ -27,7 +23,7 @@ class QueryService extends AbstractExecutionThreadService {
 
   @Override
   protected void startUp() throws Exception {
-    this.connection = Utils.openConnection(this.config);
+    this.connection = OracleUtils.openConnection(this.config);
 
     if(log.isInfoEnabled()) {
 

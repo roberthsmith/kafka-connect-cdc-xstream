@@ -307,7 +307,7 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
   @Override
   protected TableMetadata fetchTableMetadata(ChangeKey changeKey) throws SQLException {
     if (log.isInfoEnabled()) {
-      log.info("Fetching metadata for {}", changeKey);
+      log.info("{}: Fetching metadata.", changeKey);
     }
 
     OracleTableMetadata tableMetadata = new OracleTableMetadata();
@@ -315,7 +315,7 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     tableMetadata.schemaName = changeKey.schemaName;
     tableMetadata.tableName = changeKey.tableName;
 
-    try (Connection connection = Utils.openConnection(this.config)) {
+    try (Connection connection = OracleUtils.openConnection(this.config)) {
       if (log.isTraceEnabled()) {
         log.trace("{}: Querying for the column metadata.", changeKey);
       }

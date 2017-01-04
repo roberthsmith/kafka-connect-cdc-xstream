@@ -60,7 +60,7 @@ public class XStreamSourceTask12CTest extends Oracle12cTest {
     );
 
     this.config = new XStreamSourceConnectorConfig(settings);
-    this.oracleConnection = Utils.openConnection(this.config);
+    this.oracleConnection = OracleUtils.openConnection(this.config);
     XStreamOut xStreamOut = XStreamOut.attach(this.oracleConnection, "xout", null, XStreamOut.DEFAULT_MODE);
     this.xStreamOutput = new XStreamOutputImpl(xStreamOut, this.oracleConnection);
   }

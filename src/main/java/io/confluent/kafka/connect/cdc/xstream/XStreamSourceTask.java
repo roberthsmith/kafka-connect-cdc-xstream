@@ -15,7 +15,6 @@
  */
 package io.confluent.kafka.connect.cdc.xstream;
 
-import com.google.common.base.Strings;
 import io.confluent.kafka.connect.cdc.CDCSourceTask;
 import oracle.jdbc.OracleConnection;
 import oracle.streams.ColumnValue;
@@ -58,8 +57,8 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       log.info("Setting XStreamOut for this task to '{}'", this.xStreamServerName);
     }
 
-    this.xStreamOutConnection = Utils.openConnection(this.config);
-    this.metadataConnection = Utils.openConnection(this.config);
+    this.xStreamOutConnection = OracleUtils.openConnection(this.config);
+    this.metadataConnection = OracleUtils.openConnection(this.config);
 
     try {
       DatabaseMetaData databaseMetaData = this.xStreamOutConnection.getMetaData();
@@ -128,8 +127,8 @@ public class XStreamSourceTask extends CDCSourceTask<XStreamSourceConnectorConfi
       }
     }
 
-//    Utils.closeConnection(this.xStreamOutConnection);
-//    Utils.closeConnection(this.metadataConnection);
+//    OracleUtils.closeConnection(this.xStreamOutConnection);
+//    OracleUtils.closeConnection(this.metadataConnection);
   }
 
   @Override

@@ -6,8 +6,8 @@ import org.apache.kafka.connect.errors.ConnectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Utils {
-  private static final Logger log = LoggerFactory.getLogger(Utils.class);
+public class OracleUtils {
+  private static final Logger log = LoggerFactory.getLogger(OracleUtils.class);
 
   public static OracleConnection openConnection(XStreamSourceConnectorConfig config) {
     try {

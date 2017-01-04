@@ -21,7 +21,7 @@ public class Oracle11gKeyMetadataProviderTest extends Oracle11gTest {
 
   @BeforeEach
   public void before() throws SQLException {
-//    this.connection = Utils.openConnection(jdbcUrl, DockerUtils.USERNAME, DockerUtils.PASSWORD);
+//    this.connection = OracleUtils.openConnection(jdbcUrl, DockerUtils.USERNAME, DockerUtils.PASSWORD);
 //    this.keyMetadataProvider = new Oracle11gKeyMetadataProvider(this.connection);
   }
 

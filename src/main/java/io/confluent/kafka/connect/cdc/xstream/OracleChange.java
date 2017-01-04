@@ -4,7 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.BaseEncoding;
 import io.confluent.kafka.connect.cdc.Change;
+import io.confluent.kafka.connect.cdc.ChangeKey;
 import io.confluent.kafka.connect.cdc.TableMetadataProvider;
+import io.confluent.kafka.connect.cdc.Utils;
 import oracle.sql.CHAR;
 import oracle.sql.DATE;
 import oracle.sql.Datum;
@@ -120,7 +122,7 @@ class OracleChange implements Change {
         value = datum.stringValue();
         break;
       case oracle.streams.ColumnValue.DATE:
-        value = new Date(((DATE)datum).timestampValue(Calendar.getInstance()).getTime());
+        value = new Date(((DATE) datum).timestampValue(Calendar.getInstance()).getTime());
         break;
       case oracle.streams.ColumnValue.NUMBER:
         value = datum.toJdbc();
@@ -144,6 +146,7 @@ class OracleChange implements Change {
   public static OracleChange build(XStreamOutput xStreamOutput, TableMetadataProvider.TableMetadata tableMetadata, RowLCR row) throws StreamsException {
     Preconditions.checkNotNull(row, "row cannot be null.");
     Preconditions.checkNotNull(row.getSourceTime(), "row.getSourceTime() cannot be null.");
+    ChangeKey changeKey = new ChangeKey(row.getSourceDatabaseName(), row.getObjectOwner(), row.getObjectName());
     OracleChange change = new OracleChange();
     change.timestamp = row.getSourceTime().timestampValue().getTime();
     change.databaseName = row.getSourceDatabaseName();
@@ -173,7 +176,7 @@ class OracleChange implements Change {
     }
 
     if (log.isTraceEnabled()) {
-      log.trace("Processing {} column(s) for row {} in table({})", row.getNewValues().length, position, row.getObjectName());
+      log.trace("{}: Processing {} column(s) for row='{}'.", changeKey, row.getNewValues().length, position, row.getObjectName());
     }
 
     List<ColumnValue> valueColumns = new ArrayList<>(tableMetadata.columnSchemas().size());
@@ -181,21 +184,21 @@ class OracleChange implements Change {
 
     for (oracle.streams.ColumnValue columnValue : row.getNewValues()) {
       if (log.isTraceEnabled()) {
-        log.trace("column({}): Processing column for row {} in table({}) of getNewValues()", columnValue.getColumnName(), position, row.getObjectName());
+        log.trace("{}: Processing row.getNewValues({}) for row='{}'", changeKey, columnValue.getColumnName(), position);
       }
       Object value;
       Schema schema = tableMetadata.columnSchemas().get(columnValue.getColumnName());
 
       try {
         if (log.isTraceEnabled()) {
-          log.trace("column({}): Converting value for row {} in table({})", columnValue.getColumnName(), position, row.getObjectName());
+          log.trace("{}: Converting value row.getNewValues({}) to {} for row='{}'", changeKey, columnValue.getColumnName(), Utils.toString(schema), position);
         }
         value = convert(xStreamOutput, columnValue);
         if (log.isTraceEnabled()) {
-          log.trace("column({}): Converted value to {} for row {} in table({})", columnValue.getColumnName(), value, position, row.getObjectName());
+          log.trace("{}: Converted value row.getNewValues({}) to {} for row='{}'", changeKey, columnValue.getColumnName(), value, position);
         }
       } catch (SQLException ex) {
-        String message = String.format("Exception thrown while processing %s of %s", columnValue.getColumnName(), row.getObjectName());
+        String message = String.format("Exception thrown while processing row. %s: row='%s'", changeKey, position);
         throw new DataException(message, ex);
       }
 
@@ -208,7 +211,7 @@ class OracleChange implements Change {
 
       if (tableMetadata.keyColumns().contains(columnValue.getColumnName())) {
         if (log.isTraceEnabled()) {
-          log.trace("Adding key({}) for row {} in table({})", columnValue.getColumnName(), position, row.getObjectName());
+          log.trace("{}: Adding key({}) for row='{}'", changeKey, columnValue.getColumnName(), position);
         }
         keyColumns.add(outputColumnValue);
       }
@@ -240,7 +243,7 @@ class OracleChange implements Change {
     change.valueColumns = valueColumns;
 
     if (log.isTraceEnabled()) {
-      log.trace("Converted {} key(s) {} value(s) for row {} in table({})", change.keyColumns().size(), change.valueColumns().size(), position, row.getObjectName());
+      log.trace("{}: Converted {} key(s) {} value(s) for row='{}'", changeKey, change.keyColumns().size(), change.valueColumns().size(), position);
     }
 
     return change;
