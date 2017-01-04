@@ -44,8 +44,8 @@ public abstract class OracleClusterHealthCheck implements ClusterHealthCheck {
         }
 
         String jdbcUrl = dockerPort.inFormat(jdbcUrlFormat);
-        if (log.isDebugEnabled()) {
-          log.debug("Connecting to oracle instance on {}", jdbcUrl);
+        if (log.isTraceEnabled()) {
+          log.trace("Connecting to oracle instance on {}", jdbcUrl);
         }
         try (Connection connection = DriverManager.getConnection(
             jdbcUrl,
@@ -54,8 +54,8 @@ public abstract class OracleClusterHealthCheck implements ClusterHealthCheck {
         )) {
           return checkXStream(connection);
         } catch (Exception ex) {
-          if (log.isDebugEnabled()) {
-            log.debug("Exception thrown", ex);
+          if (log.isTraceEnabled()) {
+            log.trace("Exception thrown", ex);
           }
 
           Thread.sleep(2500);
