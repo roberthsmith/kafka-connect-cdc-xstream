@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class JsonRowLCR implements RowLCR, NamedTest {
+public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
   @JsonIgnore
   String name;
   boolean hasChunkData;

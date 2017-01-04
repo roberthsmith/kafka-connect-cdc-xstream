@@ -13,12 +13,9 @@ import io.confluent.kafka.connect.cdc.docker.DockerFormatString;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
 import io.confluent.kafka.connect.cdc.xstream.model.JsonRowLCR;
 import io.confluent.kafka.connect.cdc.xstream.model.TableMetadataTestCase;
-import oracle.jdbc.OracleConnection;
-import oracle.sql.TIMEZONETAB;
 import oracle.streams.ChunkColumnValue;
 import oracle.streams.RowLCR;
 import oracle.streams.StreamsException;
-import org.apache.kafka.connect.storage.OffsetStorageReader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -59,89 +56,25 @@ public class OracleChangeTests extends Oracle12cTest {
 
   @BeforeEach
   public void openConnection(
-      @DockerFormatString(container = Constants.ORACLE_CONTAINER, port = Constants.ORACLE_PORT, format = Constants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
+      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
   ) throws SQLException {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, Constants.XSTREAM_USERNAME_12C,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, Constants.XSTREAM_PASSWORD_12C,
+        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
+        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamConstants.XSTREAM_PASSWORD_12C,
         XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
     );
 
     this.connection = DriverManager.getConnection(
         jdbcUrl,
-        Constants.USERNAME,
-        Constants.PASSWORD
+        XStreamConstants.USERNAME,
+        XStreamConstants.PASSWORD
     );
   }
 
   @AfterEach
   public void cleanup() throws SQLException {
     this.connection.close();
-  }
-
-
-  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-  public static class ChangeTestCase implements NamedTest {
-    @JsonIgnore
-    String name;
-    JsonRowLCR inputRowLCR;
-    JsonTableMetadata inputTableMetadata;
-    JsonChange expected;
-
-    @Override
-    public void name(String name) {
-      this.name = name;
-    }
-
-    @Override
-    public String name() {
-      return this.name;
-    }
-
-    public JsonRowLCR inputRowLCR() {
-      return this.inputRowLCR;
-    }
-
-    public void inputRowLCR(JsonRowLCR value) {
-      this.inputRowLCR = value;
-    }
-
-    public JsonChange expected() {
-      return this.expected;
-    }
-
-    public void expected(JsonChange value) {
-      this.expected = value;
-    }
-
-    public JsonTableMetadata inputTableMetadata() {
-      return this.inputTableMetadata;
-    }
-
-    public void inputTableMetadata(JsonTableMetadata value) {
-      this.inputTableMetadata = value;
-    }
-
-    public static void write(File file, ChangeTestCase change) throws IOException {
-      try (OutputStream outputStream = new FileOutputStream(file)) {
-        ObjectMapperFactory.instance.writeValue(outputStream, change);
-      }
-    }
-
-    public static void write(OutputStream outputStream, ChangeTestCase change) throws IOException {
-      ObjectMapperFactory.instance.writeValue(outputStream, change);
-    }
-
-    public static ChangeTestCase read(InputStream inputStream) throws IOException {
-      return ObjectMapperFactory.instance.readValue(inputStream, ChangeTestCase.class);
-    }
-
-    public static ChangeTestCase read(File inputFile) throws IOException {
-      try (FileInputStream inputStream = new FileInputStream(inputFile)) {
-        return read(inputStream);
-      }
-    }
   }
 
   @Disabled
@@ -206,6 +139,69 @@ public class OracleChangeTests extends Oracle12cTest {
 
     OracleChange actual = OracleChange.build(xStreamOutput, testCase.inputTableMetadata(), testCase.inputRowLCR());
     assertChange(testCase.expected(), actual);
+  }
+
+  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
+  public static class ChangeTestCase implements NamedTest {
+    @JsonIgnore
+    String name;
+    JsonRowLCR inputRowLCR;
+    JsonTableMetadata inputTableMetadata;
+    JsonChange expected;
+
+    public static void write(File file, ChangeTestCase change) throws IOException {
+      try (OutputStream outputStream = new FileOutputStream(file)) {
+        ObjectMapperFactory.instance.writeValue(outputStream, change);
+      }
+    }
+
+    public static void write(OutputStream outputStream, ChangeTestCase change) throws IOException {
+      ObjectMapperFactory.instance.writeValue(outputStream, change);
+    }
+
+    public static ChangeTestCase read(InputStream inputStream) throws IOException {
+      return ObjectMapperFactory.instance.readValue(inputStream, ChangeTestCase.class);
+    }
+
+    public static ChangeTestCase read(File inputFile) throws IOException {
+      try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+        return read(inputStream);
+      }
+    }
+
+    @Override
+    public void name(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String name() {
+      return this.name;
+    }
+
+    public JsonRowLCR inputRowLCR() {
+      return this.inputRowLCR;
+    }
+
+    public void inputRowLCR(JsonRowLCR value) {
+      this.inputRowLCR = value;
+    }
+
+    public JsonChange expected() {
+      return this.expected;
+    }
+
+    public void expected(JsonChange value) {
+      this.expected = value;
+    }
+
+    public JsonTableMetadata inputTableMetadata() {
+      return this.inputTableMetadata;
+    }
+
+    public void inputTableMetadata(JsonTableMetadata value) {
+      this.inputTableMetadata = value;
+    }
   }
 
 

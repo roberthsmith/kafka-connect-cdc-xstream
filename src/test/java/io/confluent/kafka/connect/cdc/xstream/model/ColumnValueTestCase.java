@@ -6,7 +6,7 @@ import io.confluent.kafka.connect.cdc.JsonChange;
 import io.confluent.kafka.connect.cdc.NamedTest;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class ColumnValueTestCase implements NamedTest {
+public class ColumnValueTestCase extends TestCase implements NamedTest  {
   JsonRowLCR.JsonColumnValue input;
   JsonChange.JsonColumnValue expected;
 

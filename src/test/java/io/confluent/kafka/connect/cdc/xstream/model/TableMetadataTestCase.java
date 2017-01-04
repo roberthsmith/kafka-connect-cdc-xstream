@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class TableMetadataTestCase implements NamedTest {
+public class TableMetadataTestCase extends TestCase implements NamedTest {
   String databaseName;
   String schemaName;
   String tableName;

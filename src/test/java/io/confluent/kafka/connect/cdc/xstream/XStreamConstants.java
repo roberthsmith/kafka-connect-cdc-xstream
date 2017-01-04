@@ -1,6 +1,6 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
-public class Constants {
+public class XStreamConstants {
   public static final String USERNAME = "system";
   public static final String PASSWORD = "oracle";
   public static final String ORACLE_CONTAINER = "oracle";

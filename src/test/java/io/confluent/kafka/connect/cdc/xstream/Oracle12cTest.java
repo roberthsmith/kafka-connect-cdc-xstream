@@ -12,20 +12,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Oracle12cTest {
-  private static final Logger log = LoggerFactory.getLogger(Oracle12cTest.class);
   public static final String DOCKER_COMPOSE_FILE = "src/test/resources/docker-compose-12c.yml";
   public static final Class<? extends ClusterHealthCheck> CLUSTER_HEALTH_CHECK_CLASS = Oracle12cClusterHealthCheck.class;
+  private static final Logger log = LoggerFactory.getLogger(Oracle12cTest.class);
 
   @BeforeAll
   public static void beforeClass(
-      @DockerFormatString(container = Constants.ORACLE_CONTAINER, port = Constants.ORACLE_PORT, format = Constants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
+      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
   ) throws SQLException, InterruptedException, IOException {
     flywayMigrate(jdbcUrl, "db/migration/common", "db/migration/oracle12c");
   }
 
   static void flywayMigrate(String jdbcUrl, String... locations) throws SQLException {
     Flyway flyway = new Flyway();
-    flyway.setDataSource(jdbcUrl, Constants.USERNAME, Constants.PASSWORD);
+    flyway.setDataSource(jdbcUrl, XStreamConstants.USERNAME, XStreamConstants.PASSWORD);
     flyway.setSchemas("DATATYPE_TESTING");
     flyway.setLocations(locations);
     flyway.migrate();

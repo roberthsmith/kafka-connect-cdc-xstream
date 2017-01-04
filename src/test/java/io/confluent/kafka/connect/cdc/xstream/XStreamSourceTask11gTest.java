@@ -3,9 +3,9 @@ package io.confluent.kafka.connect.cdc.xstream;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.source.SourceTaskContext;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -20,12 +20,17 @@ import static org.mockito.Mockito.when;
 public class XStreamSourceTask11gTest extends Oracle11gTest {
   XStreamSourceTask xStreamSourceTask;
 
+  @AfterAll
+  public static void afterClass() {
+    docker.after();
+  }
+
   @Before
   public void before() {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, Constants.XSTREAM_USERNAME_12C,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, Constants.XSTREAM_PASSWORD_12C,
+        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
+        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamConstants.XSTREAM_PASSWORD_12C,
         XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
     );
 
@@ -44,15 +49,9 @@ public class XStreamSourceTask11gTest extends Oracle11gTest {
 
   }
 
-
   @AfterEach
   public void stop() {
     this.xStreamSourceTask.stop();
-  }
-
-  @AfterAll
-  public static void afterClass() {
-    docker.after();
   }
 
 

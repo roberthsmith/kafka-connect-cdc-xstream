@@ -34,12 +34,12 @@ public class Oracle12cTableMetadataProviderTests extends Oracle12cTest {
 
   @BeforeEach
   public void setup(
-      @DockerFormatString(container = Constants.ORACLE_CONTAINER, port = Constants.ORACLE_PORT, format = Constants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
+      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
   ) {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, Constants.XSTREAM_USERNAME_12C,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, Constants.XSTREAM_PASSWORD_12C,
+        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
+        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamConstants.XSTREAM_PASSWORD_12C,
         XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
     );
 

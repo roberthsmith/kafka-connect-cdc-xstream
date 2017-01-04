@@ -47,12 +47,12 @@ public class XStreamSourceTask12cTest extends Oracle12cTest {
 
   @BeforeEach
   public void before(
-      @DockerFormatString(container = Constants.ORACLE_CONTAINER, port = Constants.ORACLE_PORT, format = Constants.JDBC_URL_FORMAT_12C_ROOT) String jdbcUrl
+      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_ROOT) String jdbcUrl
   ) throws StreamsException, InterruptedException {
     Map<String, String> settings = ImmutableMap.of(
         XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, Constants.XSTREAM_USERNAME_12C,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, Constants.XSTREAM_PASSWORD_12C,
+        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
+        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamConstants.XSTREAM_PASSWORD_12C,
         XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
     );
 
@@ -60,14 +60,6 @@ public class XStreamSourceTask12cTest extends Oracle12cTest {
     this.oracleConnection = Utils.openConnection(this.config);
     XStreamOut xStreamOut = XStreamOut.attach(this.oracleConnection, "xout", null, XStreamOut.DEFAULT_MODE);
     this.xStreamOutput = new XStreamOutputImpl(xStreamOut, this.oracleConnection);
-  }
-
-  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-  public class TestCase {
-    String name;
-    JsonRowLCR expectedJsonLCR;
-    ChangeKey changeKey;
-    Path lcrPath;
   }
 
   void assertColumnValue(ColumnValue expected, ColumnValue actual, String message) {
@@ -190,7 +182,6 @@ public class XStreamSourceTask12cTest extends Oracle12cTest {
         changeTestCase.inputTableMetadata = new JsonTableMetadata();
 
 
-
         testCases.add(testCase);
       }
     }
@@ -202,5 +193,13 @@ public class XStreamSourceTask12cTest extends Oracle12cTest {
   public void stop() throws StreamsException, SQLException {
     this.xStreamOutput.detach();
     this.oracleConnection.close();
+  }
+
+  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
+  public class TestCase {
+    String name;
+    JsonRowLCR expectedJsonLCR;
+    ChangeKey changeKey;
+    Path lcrPath;
   }
 }
