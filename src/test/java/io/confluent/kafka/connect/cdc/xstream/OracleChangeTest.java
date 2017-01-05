@@ -13,8 +13,8 @@ import io.confluent.kafka.connect.cdc.TableMetadataProvider;
 import io.confluent.kafka.connect.cdc.TestDataUtils;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
-import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cSettings;
-import io.confluent.kafka.connect.cdc.xstream.docker.SettingsExtension;
+import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettings;
+import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettingsExtension;
 import io.confluent.kafka.connect.cdc.xstream.model.JsonRowLCR;
 import oracle.streams.ChunkColumnValue;
 import oracle.streams.StreamsException;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 
 @Category(Integration.class)
 @DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-@ExtendWith(SettingsExtension.class)
+@ExtendWith(OracleSettingsExtension.class)
 public class OracleChangeTest extends Oracle12cTest {
   private static final Logger log = LoggerFactory.getLogger(OracleChangeTest.class);
 
@@ -58,7 +58,7 @@ public class OracleChangeTest extends Oracle12cTest {
 
   @BeforeEach
   public void config(
-      @Oracle12cSettings
+      @OracleSettings
           Map<String, String> settings
   ) throws SQLException {
     this.config = new XStreamSourceConnectorConfig(settings);

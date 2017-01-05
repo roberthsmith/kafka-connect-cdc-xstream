@@ -7,8 +7,8 @@ import io.confluent.kafka.connect.cdc.ChangeWriter;
 import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
-import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cSettings;
-import io.confluent.kafka.connect.cdc.xstream.docker.SettingsExtension;
+import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettings;
+import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettingsExtension;
 import oracle.streams.StreamsException;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
 import org.junit.experimental.categories.Category;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.mock;
 
 @Category(Integration.class)
 @DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-@ExtendWith(SettingsExtension.class)
+@ExtendWith(OracleSettingsExtension.class)
 public class QueryServiceTest extends Oracle12cTest {
   private static final Logger log = LoggerFactory.getLogger(QueryServiceTest.class);
   XStreamSourceConnectorConfig config;
@@ -45,7 +45,7 @@ public class QueryServiceTest extends Oracle12cTest {
 
   @BeforeEach
   public void setup(
-      @Oracle12cSettings Map<String, String> settings
+      @OracleSettings Map<String, String> settings
   ) throws Exception {
     this.config = new XStreamSourceConnectorConfig(settings);
     this.offsetStorageReader = mock(OffsetStorageReader.class);

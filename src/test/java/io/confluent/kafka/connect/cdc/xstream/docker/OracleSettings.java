@@ -7,9 +7,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@ExtendWith(SettingsExtension.class)
+@ExtendWith(OracleSettingsExtension.class)
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Oracle12cSettings {
+public @interface OracleSettings {
 
 }

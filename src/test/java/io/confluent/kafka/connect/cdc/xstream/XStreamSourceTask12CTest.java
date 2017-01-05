@@ -8,7 +8,7 @@ import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
-import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cSettings;
+import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettings;
 import io.confluent.kafka.connect.cdc.xstream.model.JsonRowLCR;
 import oracle.jdbc.OracleConnection;
 import oracle.streams.ColumnValue;
@@ -48,7 +48,7 @@ public class XStreamSourceTask12CTest extends Oracle12cTest {
 
   @BeforeEach
   public void before(
-      @Oracle12cSettings
+      @OracleSettings
           Map<String, String> settings
   ) throws StreamsException, InterruptedException {
     this.config = new XStreamSourceConnectorConfig(settings);
