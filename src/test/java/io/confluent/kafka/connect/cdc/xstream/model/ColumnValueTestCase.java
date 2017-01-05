@@ -6,9 +6,11 @@ import io.confluent.kafka.connect.cdc.JsonChange;
 import io.confluent.kafka.connect.cdc.NamedTest;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class ColumnValueTestCase extends TestCase implements NamedTest  {
+public class ColumnValueTestCase extends TestCase implements NamedTest {
   JsonRowLCR.JsonColumnValue input;
   JsonChange.JsonColumnValue expected;
+  @JsonIgnore
+  String name;
 
   public JsonChange.JsonColumnValue expected() {
     return this.expected;
@@ -22,12 +24,9 @@ public class ColumnValueTestCase extends TestCase implements NamedTest  {
     return this.input;
   }
 
-  public void input(JsonRowLCR.JsonColumnValue value){
+  public void input(JsonRowLCR.JsonColumnValue value) {
     this.input = value;
   }
-
-  @JsonIgnore
-  String name;
 
   @Override
   public void name(String name) {

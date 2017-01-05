@@ -2,21 +2,19 @@ package io.confluent.kafka.connect.cdc.xstream;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import io.confluent.kafka.connect.cdc.ChangeKey;
 import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
-import io.confluent.kafka.connect.cdc.docker.DockerFormatString;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
+import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cSettings;
 import io.confluent.kafka.connect.cdc.xstream.model.JsonRowLCR;
 import oracle.jdbc.OracleConnection;
 import oracle.streams.ColumnValue;
 import oracle.streams.LCR;
 import oracle.streams.RowLCR;
 import oracle.streams.StreamsException;
-import oracle.streams.XStreamOut;
 import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,19 +48,12 @@ public class XStreamSourceTask12CTest extends Oracle12cTest {
 
   @BeforeEach
   public void before(
-      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_ROOT) String jdbcUrl
+      @Oracle12cSettings
+          Map<String, String> settings
   ) throws StreamsException, InterruptedException {
-    Map<String, String> settings = ImmutableMap.of(
-        XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamConstants.XSTREAM_USERNAME_12C,
-        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamConstants.XSTREAM_PASSWORD_12C,
-        XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
-    );
-
     this.config = new XStreamSourceConnectorConfig(settings);
-    this.oracleConnection = OracleUtils.openConnection(this.config);
-    XStreamOut xStreamOut = XStreamOut.attach(this.oracleConnection, "xout", null, XStreamOut.DEFAULT_MODE);
-    this.xStreamOutput = new XStreamOutputImpl(xStreamOut, this.oracleConnection);
+    this.oracleConnection = OracleUtils.openUnPooledConnection(this.config);
+    this.xStreamOutput = XStreamOutputImpl.attach(this.oracleConnection, this.config, null);
   }
 
   void assertColumnValue(ColumnValue expected, ColumnValue actual, String message) {

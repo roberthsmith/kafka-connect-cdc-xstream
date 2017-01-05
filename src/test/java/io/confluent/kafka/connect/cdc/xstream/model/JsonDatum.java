@@ -48,7 +48,7 @@ class JsonDatum {
       if (datum instanceof DATE) {
         storage.datumType = ColumnValue.DATE;
       } else if (datum instanceof CHAR) {
-        storage.charset = ((CHAR)datum).getCharacterSet().getOracleId();
+        storage.charset = ((CHAR) datum).getCharacterSet().getOracleId();
         storage.datumType = ColumnValue.CHAR;
       } else if (datum instanceof NUMBER) {
         storage.datumType = ColumnValue.NUMBER;

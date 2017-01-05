@@ -19,7 +19,6 @@ import com.google.common.base.Preconditions;
 import io.confluent.kafka.connect.cdc.CDCSourceConnector;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
-import org.apache.kafka.connect.source.SourceConnector;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

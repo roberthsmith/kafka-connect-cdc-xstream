@@ -18,14 +18,14 @@ public class Oracle12cTest {
 
   @BeforeAll
   public static void beforeClass(
-      @DockerFormatString(container = XStreamConstants.ORACLE_CONTAINER, port = XStreamConstants.ORACLE_PORT, format = XStreamConstants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
+      @DockerFormatString(container = XStreamTestConstants.ORACLE_CONTAINER, port = XStreamTestConstants.ORACLE_PORT, format = XStreamTestConstants.JDBC_URL_FORMAT_12C_PDB) String jdbcUrl
   ) throws SQLException, InterruptedException, IOException {
     flywayMigrate(jdbcUrl, "db/migration/common", "db/migration/oracle12c");
   }
 
   static void flywayMigrate(String jdbcUrl, String... locations) throws SQLException {
     Flyway flyway = new Flyway();
-    flyway.setDataSource(jdbcUrl, XStreamConstants.USERNAME, XStreamConstants.PASSWORD);
+    flyway.setDataSource(jdbcUrl, XStreamTestConstants.USERNAME, XStreamTestConstants.PASSWORD);
     flyway.setSchemas("DATATYPE_TESTING");
     flyway.setLocations(locations);
     flyway.migrate();

@@ -6,7 +6,7 @@ import com.palantir.docker.compose.connection.DockerPort;
 import com.palantir.docker.compose.connection.waiting.Attempt;
 import com.palantir.docker.compose.connection.waiting.ClusterHealthCheck;
 import com.palantir.docker.compose.connection.waiting.SuccessOrFailure;
-import io.confluent.kafka.connect.cdc.xstream.XStreamConstants;
+import io.confluent.kafka.connect.cdc.xstream.XStreamTestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +34,11 @@ public abstract class OracleClusterHealthCheck implements ClusterHealthCheck {
     return SuccessOrFailure.onResultOf(new Attempt() {
       @Override
       public boolean attempt() throws Exception {
-        Container oracleContainer = cluster.container(XStreamConstants.ORACLE_CONTAINER);
-        DockerPort dockerPort = oracleContainer.port(XStreamConstants.ORACLE_PORT);
+        Container oracleContainer = cluster.container(XStreamTestConstants.ORACLE_CONTAINER);
+        DockerPort dockerPort = oracleContainer.port(XStreamTestConstants.ORACLE_PORT);
         if (!dockerPort.isListeningNow()) {
           if (log.isTraceEnabled()) {
-            log.trace("Port {} is not listening on container {}.", XStreamConstants.ORACLE_PORT, XStreamConstants.ORACLE_CONTAINER);
+            log.trace("Port {} is not listening on container {}.", XStreamTestConstants.ORACLE_PORT, XStreamTestConstants.ORACLE_CONTAINER);
           }
           return false;
         }

@@ -18,6 +18,20 @@ public class TableMetadataTestCase extends TestCase implements NamedTest {
   String tableName;
   JsonTableMetadata expected;
 
+  public static void write(File file, TableMetadataTestCase change) throws IOException {
+    try (OutputStream outputStream = new FileOutputStream(file)) {
+      ObjectMapperFactory.instance.writeValue(outputStream, change);
+    }
+  }
+
+  public static void write(OutputStream outputStream, TableMetadataTestCase change) throws IOException {
+    ObjectMapperFactory.instance.writeValue(outputStream, change);
+  }
+
+  public static TableMetadataTestCase read(InputStream inputStream) throws IOException {
+    return ObjectMapperFactory.instance.readValue(inputStream, TableMetadataTestCase.class);
+  }
+
   public String databaseName() {
     return this.databaseName;
   }
@@ -48,20 +62,6 @@ public class TableMetadataTestCase extends TestCase implements NamedTest {
 
   public void expected(JsonTableMetadata value) {
     this.expected = value;
-  }
-
-  public static void write(File file, TableMetadataTestCase change) throws IOException {
-    try (OutputStream outputStream = new FileOutputStream(file)) {
-      ObjectMapperFactory.instance.writeValue(outputStream, change);
-    }
-  }
-
-  public static void write(OutputStream outputStream, TableMetadataTestCase change) throws IOException {
-    ObjectMapperFactory.instance.writeValue(outputStream, change);
-  }
-
-  public static TableMetadataTestCase read(InputStream inputStream) throws IOException {
-    return ObjectMapperFactory.instance.readValue(inputStream, TableMetadataTestCase.class);
   }
 
   @Override

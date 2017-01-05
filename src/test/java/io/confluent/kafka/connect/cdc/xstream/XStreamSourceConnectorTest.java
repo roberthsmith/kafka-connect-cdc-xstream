@@ -31,7 +31,7 @@ public class XStreamSourceConnectorTest {
   @BeforeEach
   public void setup() {
     this.xStreamSourceConnector = new XStreamSourceConnector();
-    this.settings = XStreamSourceConnectorConfigTest.settings();
+    this.settings = XStreamTestConstants.settings("localhost", 1521);
   }
 
   @Test

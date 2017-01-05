@@ -8,6 +8,9 @@
     <logger name="io.confluent" level="DEBUG" />
     <logger name="io.confluent.kafka.connect.cdc.xstream.OracleChange" level="TRACE" />
     <logger name="io.confluent.kafka.connect.cdc.xstream.Oracle12cTableMetadataProvider" level="TRACE" />
+    <logger name="io.confluent.kafka.connect.cdc.xstream.QueryService" level="TRACE" />
+    <logger name="io.confluent.kafka.connect.cdc.JdbcUtils" level="TRACE" />
+    <logger name="io.confluent.kafka.connect.cdc.xstream.OracleConnectionPoolDataSourceFactory" level="TRACE" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

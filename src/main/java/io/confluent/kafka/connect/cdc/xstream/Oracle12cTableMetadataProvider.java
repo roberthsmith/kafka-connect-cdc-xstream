@@ -1,6 +1,7 @@
 package io.confluent.kafka.connect.cdc.xstream;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -9,6 +10,7 @@ import com.google.common.collect.Multimap;
 import io.confluent.kafka.connect.cdc.CachingTableMetadataProvider;
 import io.confluent.kafka.connect.cdc.Change;
 import io.confluent.kafka.connect.cdc.ChangeKey;
+import io.confluent.kafka.connect.cdc.JdbcUtils;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
@@ -18,6 +20,7 @@ import org.apache.kafka.connect.storage.OffsetStorageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.PooledConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,17 +35,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStreamSourceConnectorConfig> {
-  private static final Logger log = LoggerFactory.getLogger(Oracle12cTableMetadataProvider.class);
-
-  public Oracle12cTableMetadataProvider(XStreamSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
-    super(config, offsetStorageReader);
-  }
-
-  @Override
-  public Map<String, Object> startOffset(ChangeKey changeKey) throws SQLException {
-    return offsetStorageReader.offset(changeKey.sourcePartition());
-  }
-
   static final String PRIMARY_KEY_SQL = "SELECT " +
       "  cols.table_name, " +
       "  cols.column_name, " +
@@ -63,7 +55,6 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
       "  cols.table_name = ? " +
       "ORDER BY " +
       "  cols.position";
-
   static final String UNIQUE_CONSTRAINT_SQL = "SELECT " +
       "  cons.constraint_name, " +
       "  cons.owner, " +
@@ -86,6 +77,60 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
       "ORDER BY " +
       "  cons.constraint_name, " +
       "  cols.position";
+  static final String COLUMN_SQL = "SELECT " +
+      "  COLS.COLUMN_NAME, " +
+      "  COLS.DATA_TYPE, " +
+      "  COLS.DATA_SCALE, " +
+      "  COLS.NULLABLE, " +
+      "  COMS.COMMENTS " +
+      "FROM " +
+      "  ALL_TAB_COLS COLS " +
+      "JOIN " +
+      "  ALL_COL_COMMENTS COMS " +
+      "ON " +
+      "  COLS.OWNER = COMS.OWNER AND " +
+      "  COLS.TABLE_NAME = COMS.TABLE_NAME AND " +
+      "  COLS.COLUMN_NAME = COMS.COLUMN_NAME " +
+      "WHERE " +
+      "  UPPER(COLS.OWNER) = UPPER(?) AND " +
+      "  UPPER(COLS.TABLE_NAME) = UPPER(?) " +
+      "order by " +
+      "  COLS.COLUMN_ID";
+  static final Map<String, Schema.Type> typeLookup;
+  final static Pattern TIMESTAMP_PATTERN = Pattern.compile("^TIMESTAMP\\(\\d\\)$");
+  final static Pattern TIMESTAMP_WITH_LOCAL_TIMEZONE = Pattern.compile("^TIMESTAMP\\(\\d\\) WITH LOCAL TIME ZONE$");
+  final static Pattern TIMESTAMP_WITH_TIMEZONE = Pattern.compile("^TIMESTAMP\\(\\d\\) WITH TIME ZONE$");
+  private static final Logger log = LoggerFactory.getLogger(Oracle12cTableMetadataProvider.class);
+
+  static {
+    Map<String, Schema.Type> map = new HashMap<>();
+    map.put("BINARY_DOUBLE", Schema.Type.FLOAT64);
+    map.put("BINARY_FLOAT", Schema.Type.FLOAT32);
+    map.put("BLOB", Schema.Type.BYTES);
+    map.put("CHAR", Schema.Type.STRING);
+    map.put("NCHAR", Schema.Type.STRING);
+    map.put("CLOB", Schema.Type.STRING);
+    map.put("NCLOB", Schema.Type.STRING);
+    map.put("NVARCHAR2", Schema.Type.STRING);
+    map.put("VARCHAR2", Schema.Type.STRING);
+    map.put("NVARCHAR", Schema.Type.STRING);
+    map.put("VARCHAR", Schema.Type.STRING);
+    typeLookup = ImmutableMap.copyOf(map);
+  }
+
+  public Oracle12cTableMetadataProvider(XStreamSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
+    super(config, offsetStorageReader);
+  }
+
+  static boolean matches(Pattern pattern, String input) {
+    Matcher matcher = pattern.matcher(input);
+    return matcher.matches();
+  }
+
+  @Override
+  public Map<String, Object> startOffset(ChangeKey changeKey) throws SQLException {
+    return offsetStorageReader.offset(changeKey.sourcePartition());
+  }
 
   Set<String> findKeys(Connection connection, ChangeKey changeKey) throws SQLException {
     Set<String> keys = new LinkedHashSet<>();
@@ -180,87 +225,6 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     return keys;
   }
 
-  class OracleTableMetadata implements TableMetadata {
-    String databaseName;
-    String schemaName;
-    String tableName;
-    Set<String> keyColumns;
-    Map<String, Schema> columnSchemas;
-
-
-    @Override
-    public String databaseName() {
-      return this.databaseName;
-    }
-
-    @Override
-    public String schemaName() {
-      return this.schemaName;
-    }
-
-    @Override
-    public String tableName() {
-      return this.tableName;
-    }
-
-    @Override
-    public Set<String> keyColumns() {
-      return this.keyColumns;
-    }
-
-    @Override
-    public Map<String, Schema> columnSchemas() {
-      return this.columnSchemas;
-    }
-  }
-
-  static final String COLUMN_SQL = "SELECT " +
-      "  COLS.COLUMN_NAME, " +
-      "  COLS.DATA_TYPE, " +
-      "  COLS.DATA_SCALE, " +
-      "  COLS.NULLABLE, " +
-      "  COMS.COMMENTS " +
-      "FROM " +
-      "  ALL_TAB_COLS COLS " +
-      "JOIN " +
-      "  ALL_COL_COMMENTS COMS " +
-      "ON " +
-      "  COLS.OWNER = COMS.OWNER AND " +
-      "  COLS.TABLE_NAME = COMS.TABLE_NAME AND " +
-      "  COLS.COLUMN_NAME = COMS.COLUMN_NAME " +
-      "WHERE " +
-      "  UPPER(COLS.OWNER) = UPPER(?) AND " +
-      "  UPPER(COLS.TABLE_NAME) = UPPER(?) " +
-      "order by " +
-      "  COLS.COLUMN_ID";
-
-  static final Map<String, Schema.Type> typeLookup;
-
-  static {
-    Map<String, Schema.Type> map = new HashMap<>();
-    map.put("BINARY_DOUBLE", Schema.Type.FLOAT64);
-    map.put("BINARY_FLOAT", Schema.Type.FLOAT32);
-    map.put("BLOB", Schema.Type.BYTES);
-    map.put("CHAR", Schema.Type.STRING);
-    map.put("NCHAR", Schema.Type.STRING);
-    map.put("CLOB", Schema.Type.STRING);
-    map.put("NCLOB", Schema.Type.STRING);
-    map.put("NVARCHAR2", Schema.Type.STRING);
-    map.put("VARCHAR2", Schema.Type.STRING);
-    map.put("NVARCHAR", Schema.Type.STRING);
-    map.put("VARCHAR", Schema.Type.STRING);
-    typeLookup = ImmutableMap.copyOf(map);
-  }
-
-  final static Pattern TIMESTAMP_PATTERN = Pattern.compile("^TIMESTAMP\\(\\d\\)$");
-  final static Pattern TIMESTAMP_WITH_LOCAL_TIMEZONE = Pattern.compile("^TIMESTAMP\\(\\d\\) WITH LOCAL TIME ZONE$");
-  final static Pattern TIMESTAMP_WITH_TIMEZONE = Pattern.compile("^TIMESTAMP\\(\\d\\) WITH TIME ZONE$");
-
-  static boolean matches(Pattern pattern, String input) {
-    Matcher matcher = pattern.matcher(input);
-    return matcher.matches();
-  }
-
   Schema generateSchema(ResultSet resultSet, final String columnName) throws SQLException {
     SchemaBuilder builder = null;
 
@@ -303,7 +267,6 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     return builder.build();
   }
 
-
   @Override
   protected TableMetadata fetchTableMetadata(ChangeKey changeKey) throws SQLException {
     if (log.isInfoEnabled()) {
@@ -315,11 +278,24 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     tableMetadata.schemaName = changeKey.schemaName;
     tableMetadata.tableName = changeKey.tableName;
 
-    try (Connection connection = OracleUtils.openConnection(this.config)) {
+    PooledConnection pooledConnection = null;
+    try {
+      pooledConnection = JdbcUtils.openPooledConnection(this.config, changeKey);
+      if (log.isTraceEnabled()) {
+        log.trace("{}: Pooled connection received. JdbcUrl = {}", changeKey, pooledConnection.getConnection().getMetaData().getURL());
+      }
+//      try (Statement statement = pooledConnection.getConnection().createStatement()) {
+//        final String SQL = String.format("ALTER SESSION SET container = %s", changeKey.databaseName);
+//        if (log.isTraceEnabled()) {
+//          log.trace("{}: Changing container to {}", changeKey, changeKey.databaseName);
+//        }
+//        statement.execute(SQL);
+//      }
+
       if (log.isTraceEnabled()) {
         log.trace("{}: Querying for the column metadata.", changeKey);
       }
-      try (PreparedStatement columnStatement = connection.prepareStatement(COLUMN_SQL)) {
+      try (PreparedStatement columnStatement = pooledConnection.getConnection().prepareStatement(COLUMN_SQL)) {
         columnStatement.setString(1, changeKey.schemaName);
         columnStatement.setString(2, changeKey.tableName);
 
@@ -341,7 +317,11 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
         tableMetadata.columnSchemas = columnSchemas;
       }
 
-      tableMetadata.keyColumns = findKeys(connection, changeKey);
+      Preconditions.checkState(!tableMetadata.columnSchemas.isEmpty(), "%s: Could not find any columns", changeKey);
+
+      tableMetadata.keyColumns = findKeys(pooledConnection.getConnection(), changeKey);
+    } finally {
+      JdbcUtils.closeConnection(pooledConnection);
     }
 
     if (tableMetadata.keyColumns.isEmpty()) {
@@ -357,5 +337,39 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     }
 
     return tableMetadata;
+  }
+
+  class OracleTableMetadata implements TableMetadata {
+    String databaseName;
+    String schemaName;
+    String tableName;
+    Set<String> keyColumns;
+    Map<String, Schema> columnSchemas;
+
+
+    @Override
+    public String databaseName() {
+      return this.databaseName;
+    }
+
+    @Override
+    public String schemaName() {
+      return this.schemaName;
+    }
+
+    @Override
+    public String tableName() {
+      return this.tableName;
+    }
+
+    @Override
+    public Set<String> keyColumns() {
+      return this.keyColumns;
+    }
+
+    @Override
+    public Map<String, Schema> columnSchemas() {
+      return this.columnSchemas;
+    }
   }
 }

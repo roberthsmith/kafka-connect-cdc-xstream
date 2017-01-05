@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
+public class JsonRowLCR extends TestCase implements RowLCR, NamedTest {
   @JsonIgnore
   String name;
   boolean hasChunkData;
@@ -45,19 +45,6 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
   JsonColumnValue[] newValues = new JsonColumnValue[0];
   List<JsonChunkColumnValue> chunkColumnValues = new ArrayList<>();
 
-  public void chunkColumnValues(List<JsonChunkColumnValue> value) {
-    this.chunkColumnValues = value;
-  }
-
-  public List<JsonChunkColumnValue> chunkColumnValues() {
-    return this.chunkColumnValues;
-  }
-
-  @Override
-  public ColumnValue[] getOldValues() {
-    return this.oldValues;
-  }
-
   private static JsonColumnValue[] convertColumnValues(ColumnValue[] columnValues) throws StreamsException {
     int length = columnValues == null ? 0 : columnValues.length;
     JsonColumnValue[] convertedValues = new JsonColumnValue[length];
@@ -72,6 +59,85 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
       convertedValues[i] = outputValue;
     }
     return convertedValues;
+  }
+
+  static void copyAttributes(LCR sourceLCR, LCR targetLCR) {
+    copyAttribute(LCR.ATTRIBUTE_ROOT_NAME, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_TX_NAME, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_ROW_ID, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_SERIAL_NUM, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_SESSION_NUM, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_THREAD_NUM, sourceLCR, targetLCR);
+    copyAttribute(LCR.ATTRIBUTE_USERNAME, sourceLCR, targetLCR);
+  }
+
+  static void copyAttribute(String attributeName, LCR sourceLCR, LCR targetLCR) {
+    Object value = sourceLCR.getAttribute(attributeName);
+
+    if (null != value) {
+      targetLCR.setAttribute(attributeName, value);
+    }
+  }
+
+  public static JsonRowLCR build(XStreamOutput xStreamOutput, RowLCR rowLCR) throws StreamsException {
+    JsonRowLCR jsonRowLCR = new JsonRowLCR();
+    jsonRowLCR.setSourceTime(rowLCR.getSourceTime());
+    jsonRowLCR.setChunkDataFlag(rowLCR.hasChunkData());
+    jsonRowLCR.setCommandType(rowLCR.getCommandType());
+    jsonRowLCR.setObjectName(rowLCR.getObjectName());
+    jsonRowLCR.setObjectOwner(rowLCR.getObjectOwner());
+    jsonRowLCR.setPosition(rowLCR.getPosition());
+    jsonRowLCR.setSourceDatabaseName(rowLCR.getSourceDatabaseName());
+    jsonRowLCR.setTag(rowLCR.getTag());
+    jsonRowLCR.setTransactionId(rowLCR.getTransactionId());
+    jsonRowLCR.newValues = convertColumnValues(rowLCR.getNewValues());
+    jsonRowLCR.oldValues = convertColumnValues(rowLCR.getOldValues());
+    copyAttributes(rowLCR, jsonRowLCR);
+
+    if (rowLCR.hasChunkData()) {
+      jsonRowLCR.setChunkDataFlag(true);
+      ChunkColumnValue chunkColumnValue;
+      do {
+        chunkColumnValue = xStreamOutput.receiveChunk();
+        JsonChunkColumnValue jsonChunkColumnValue = JsonChunkColumnValue.buildChunk(chunkColumnValue);
+        jsonRowLCR.chunkColumnValues.add(jsonChunkColumnValue);
+      } while (!chunkColumnValue.isEndOfRow());
+    }
+
+    return jsonRowLCR;
+  }
+
+  public static void write(File file, JsonRowLCR change) throws IOException {
+    try (OutputStream outputStream = new FileOutputStream(file)) {
+      ObjectMapperFactory.instance.writeValue(outputStream, change);
+    }
+  }
+
+  public static void write(OutputStream outputStream, JsonRowLCR change) throws IOException {
+    ObjectMapperFactory.instance.writeValue(outputStream, change);
+  }
+
+  public static JsonRowLCR read(InputStream inputStream) throws IOException {
+    return ObjectMapperFactory.instance.readValue(inputStream, JsonRowLCR.class);
+  }
+
+  public static JsonRowLCR read(File inputFile) throws IOException {
+    try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+      return read(inputStream);
+    }
+  }
+
+  public void chunkColumnValues(List<JsonChunkColumnValue> value) {
+    this.chunkColumnValues = value;
+  }
+
+  public List<JsonChunkColumnValue> chunkColumnValues() {
+    return this.chunkColumnValues;
+  }
+
+  @Override
+  public ColumnValue[] getOldValues() {
+    return this.oldValues;
   }
 
   @Override
@@ -199,72 +265,6 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
     sourceTime = date.toBytes();
   }
 
-  static void copyAttributes(LCR sourceLCR, LCR targetLCR) {
-    copyAttribute(LCR.ATTRIBUTE_ROOT_NAME, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_TX_NAME, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_ROW_ID, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_SERIAL_NUM, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_SESSION_NUM, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_THREAD_NUM, sourceLCR, targetLCR);
-    copyAttribute(LCR.ATTRIBUTE_USERNAME, sourceLCR, targetLCR);
-  }
-
-  static void copyAttribute(String attributeName, LCR sourceLCR, LCR targetLCR) {
-    Object value = sourceLCR.getAttribute(attributeName);
-
-    if (null != value) {
-      targetLCR.setAttribute(attributeName, value);
-    }
-  }
-
-  public static JsonRowLCR build(XStreamOutput xStreamOutput, RowLCR rowLCR) throws StreamsException {
-    JsonRowLCR jsonRowLCR = new JsonRowLCR();
-    jsonRowLCR.setSourceTime(rowLCR.getSourceTime());
-    jsonRowLCR.setChunkDataFlag(rowLCR.hasChunkData());
-    jsonRowLCR.setCommandType(rowLCR.getCommandType());
-    jsonRowLCR.setObjectName(rowLCR.getObjectName());
-    jsonRowLCR.setObjectOwner(rowLCR.getObjectOwner());
-    jsonRowLCR.setPosition(rowLCR.getPosition());
-    jsonRowLCR.setSourceDatabaseName(rowLCR.getSourceDatabaseName());
-    jsonRowLCR.setTag(rowLCR.getTag());
-    jsonRowLCR.setTransactionId(rowLCR.getTransactionId());
-    jsonRowLCR.newValues = convertColumnValues(rowLCR.getNewValues());
-    jsonRowLCR.oldValues = convertColumnValues(rowLCR.getOldValues());
-    copyAttributes(rowLCR, jsonRowLCR);
-
-    if (rowLCR.hasChunkData()) {
-      jsonRowLCR.setChunkDataFlag(true);
-      ChunkColumnValue chunkColumnValue;
-      do {
-        chunkColumnValue = xStreamOutput.receiveChunk();
-        JsonChunkColumnValue jsonChunkColumnValue = JsonChunkColumnValue.buildChunk(chunkColumnValue);
-        jsonRowLCR.chunkColumnValues.add(jsonChunkColumnValue);
-      } while (!chunkColumnValue.isEndOfRow());
-    }
-
-    return jsonRowLCR;
-  }
-
-  public static void write(File file, JsonRowLCR change) throws IOException {
-    try (OutputStream outputStream = new FileOutputStream(file)) {
-      ObjectMapperFactory.instance.writeValue(outputStream, change);
-    }
-  }
-
-  public static void write(OutputStream outputStream, JsonRowLCR change) throws IOException {
-    ObjectMapperFactory.instance.writeValue(outputStream, change);
-  }
-
-  public static JsonRowLCR read(InputStream inputStream) throws IOException {
-    return ObjectMapperFactory.instance.readValue(inputStream, JsonRowLCR.class);
-  }
-
-  public static JsonRowLCR read(File inputFile) throws IOException {
-    try (FileInputStream inputStream = new FileInputStream(inputFile)) {
-      return read(inputStream);
-    }
-  }
-
   @Override
   public void name(String name) {
     this.name = name;
@@ -286,6 +286,20 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
     boolean emptyChunk;
     boolean xmlDiff;
     boolean endOfRow;
+
+    public static JsonChunkColumnValue buildChunk(ChunkColumnValue chunkColumnValue) throws StreamsException {
+      JsonChunkColumnValue jsonChunkColumnValue = new JsonChunkColumnValue();
+      copyValues(chunkColumnValue, jsonChunkColumnValue);
+      jsonChunkColumnValue.setChunkOffset(chunkColumnValue.getChunkOffset());
+      jsonChunkColumnValue.setChunkOperationSize(chunkColumnValue.getChunkOperationSize());
+      jsonChunkColumnValue.setChunkType(chunkColumnValue.getChunkType());
+      jsonChunkColumnValue.setEmptyChunk(chunkColumnValue.isEmptyChunk());
+      jsonChunkColumnValue.setEndOfRow(chunkColumnValue.isEndOfRow());
+      jsonChunkColumnValue.setLastChunk(chunkColumnValue.isLastChunk());
+      jsonChunkColumnValue.setXMLDiff(chunkColumnValue.isXMLDiff());
+
+      return jsonChunkColumnValue;
+    }
 
     @Override
     public int getChunkType() {
@@ -366,20 +380,6 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
     public void setEndOfRow(boolean b) {
       this.endOfRow = b;
     }
-
-    public static JsonChunkColumnValue buildChunk(ChunkColumnValue chunkColumnValue) throws StreamsException {
-      JsonChunkColumnValue jsonChunkColumnValue = new JsonChunkColumnValue();
-      copyValues(chunkColumnValue, jsonChunkColumnValue);
-      jsonChunkColumnValue.setChunkOffset(chunkColumnValue.getChunkOffset());
-      jsonChunkColumnValue.setChunkOperationSize(chunkColumnValue.getChunkOperationSize());
-      jsonChunkColumnValue.setChunkType(chunkColumnValue.getChunkType());
-      jsonChunkColumnValue.setEmptyChunk(chunkColumnValue.isEmptyChunk());
-      jsonChunkColumnValue.setEndOfRow(chunkColumnValue.isEndOfRow());
-      jsonChunkColumnValue.setLastChunk(chunkColumnValue.isLastChunk());
-      jsonChunkColumnValue.setXMLDiff(chunkColumnValue.isXMLDiff());
-
-      return jsonChunkColumnValue;
-    }
   }
 
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -391,6 +391,20 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
     boolean is32kData;
     BigInteger charsetId;
     Datum columnData;
+
+    public static JsonColumnValue build(ColumnValue columnValue) throws StreamsException {
+      JsonColumnValue jsonColumnValue = new JsonColumnValue();
+      copyValues(columnValue, jsonColumnValue);
+      jsonColumnValue.setColumnData(columnValue.getColumnData(), columnValue.getColumnDataType());
+      return jsonColumnValue;
+    }
+
+    protected static void copyValues(ColumnValue columnValue, JsonColumnValue jsonColumnValue) {
+      jsonColumnValue.set32kData(columnValue.is32kData());
+      jsonColumnValue.setCharsetId(columnValue.getCharsetId());
+      jsonColumnValue.setColumnName(columnValue.getColumnName());
+      jsonColumnValue.setTDEFlag(columnValue.getTDEFlag());
+    }
 
     @Override
     public String getColumnName() {
@@ -446,21 +460,6 @@ public class JsonRowLCR extends TestCase  implements RowLCR, NamedTest {
     @Override
     public void setCharsetId(int i) {
       this.charsetId = BigInteger.valueOf(i);
-    }
-
-
-    public static JsonColumnValue build(ColumnValue columnValue) throws StreamsException {
-      JsonColumnValue jsonColumnValue = new JsonColumnValue();
-      copyValues(columnValue, jsonColumnValue);
-      jsonColumnValue.setColumnData(columnValue.getColumnData(), columnValue.getColumnDataType());
-      return jsonColumnValue;
-    }
-
-    protected static void copyValues(ColumnValue columnValue, JsonColumnValue jsonColumnValue) {
-      jsonColumnValue.set32kData(columnValue.is32kData());
-      jsonColumnValue.setCharsetId(columnValue.getCharsetId());
-      jsonColumnValue.setColumnName(columnValue.getColumnName());
-      jsonColumnValue.setTDEFlag(columnValue.getTDEFlag());
     }
   }
 

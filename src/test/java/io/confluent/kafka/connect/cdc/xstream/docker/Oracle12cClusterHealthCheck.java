@@ -1,6 +1,6 @@
 package io.confluent.kafka.connect.cdc.xstream.docker;
 
-import io.confluent.kafka.connect.cdc.xstream.XStreamConstants;
+import io.confluent.kafka.connect.cdc.xstream.XStreamTestConstants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class Oracle12cClusterHealthCheck extends OracleClusterHealthCheck {
   public Oracle12cClusterHealthCheck() {
-    super(XStreamConstants.JDBC_URL_FORMAT_12C_PDB, XStreamConstants.XSTREAM_USERNAME_12C, XStreamConstants.XSTREAM_PASSWORD_12C);
+    super(XStreamTestConstants.JDBC_URL_FORMAT_12C_PDB, XStreamTestConstants.XSTREAM_USERNAME_12C, XStreamTestConstants.XSTREAM_PASSWORD_12C);
   }
 
   @Override

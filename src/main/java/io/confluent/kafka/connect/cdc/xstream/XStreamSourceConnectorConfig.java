@@ -15,30 +15,30 @@
  */
 package io.confluent.kafka.connect.cdc.xstream;
 
-import io.confluent.kafka.connect.cdc.CDCSourceConnectorConfig;
-import io.confluent.kafka.connect.cdc.JdbcCDCSourceConnectorConfig;
+import com.google.common.collect.ImmutableSet;
+import io.confluent.kafka.connect.cdc.PooledCDCSourceConnectorConfig;
 import oracle.streams.RowLCR;
 import oracle.streams.XStreamOut;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class XStreamSourceConnectorConfig extends JdbcCDCSourceConnectorConfig {
+public class XStreamSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleConnectionPoolDataSourceFactory> {
 
 
-  public static final String XSTREAM_SERVER_NAMES_CONF = "xstream.server.names";
-  public static final String XSTREAM_BATCH_INTERVAL_CONF = "xstream.batch.interval";
-  public static final String XSTREAM_IDLE_TIMEOUT_CONF = "xstream.idle.timeout";
-  public static final String XSTREAM_RECEIVE_WAIT_CONF = "xstream.receive.wait.ms";
+  public static final String XSTREAM_SERVER_NAMES_CONF = "oracle.xstream.server.names";
+  public static final String XSTREAM_BATCH_INTERVAL_CONF = "oracle.xstream.batch.interval";
+  public static final String XSTREAM_IDLE_TIMEOUT_CONF = "oracle.xstream.idle.timeout";
+  public static final String XSTREAM_RECEIVE_WAIT_CONF = "oracle.xstream.receive.wait.ms";
+
   public static final String XSTREAM_ALLOWED_COMMANDS_CONF = "xstream.allowed.commands";
   static final String XSTREAM_SERVER_NAMES_DOC = "Name of the XStream outbound servers.";
   static final String XSTREAM_BATCH_INTERVAL_DOC = "XStreamOut batch processing interval.";
   static final String XSTREAM_IDLE_TIMEOUT_DOC = "XStreamOut idle timeout value.";
-  static final String XSTREAM_RECEIVE_WAIT_DOC = "The amount of time to wait in milliseconds when XStreamOut.receiveLCR() returns null";
+  static final String XSTREAM_RECEIVE_WAIT_DOC = "The amount of time to wait in milliseconds when XStreamOut.receiveChange() returns null";
   static final String XSTREAM_ALLOWED_COMMANDS_DOC = "The commands the task should process.";
   static final int XSTREAM_RECEIVE_WAIT_DEFAULT = 1000;
   static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE);
@@ -48,22 +48,26 @@ public class XStreamSourceConnectorConfig extends JdbcCDCSourceConnectorConfig {
   public final int xStreamReceiveWait;
   public final Set<String> allowedCommands;
 
-  public XStreamSourceConnectorConfig(Map<String, String> parsedConfig) {
+  public XStreamSourceConnectorConfig(Map<?, ?> parsedConfig) {
     super(config(), parsedConfig);
-
     this.xStreamReceiveWait = this.getInt(XSTREAM_RECEIVE_WAIT_CONF);
-    this.allowedCommands = new HashSet<>(this.getList(XSTREAM_ALLOWED_COMMANDS_CONF));
+    this.allowedCommands = ImmutableSet.copyOf(this.getList(XSTREAM_ALLOWED_COMMANDS_CONF));
     this.xStreamServerNames = this.getList(XSTREAM_SERVER_NAMES_CONF);
     this.xStreamBatchInterval = this.getInt(XSTREAM_BATCH_INTERVAL_CONF);
     this.xStreamIdleTimeout = this.getInt(XSTREAM_IDLE_TIMEOUT_CONF);
   }
 
   public static ConfigDef config() {
-    return JdbcCDCSourceConnectorConfig.config()
+    return PooledCDCSourceConnectorConfig.config()
         .define(XSTREAM_RECEIVE_WAIT_CONF, ConfigDef.Type.INT, XSTREAM_RECEIVE_WAIT_DEFAULT, ConfigDef.Importance.LOW, XSTREAM_RECEIVE_WAIT_DOC)
         .define(XSTREAM_ALLOWED_COMMANDS_CONF, ConfigDef.Type.LIST, XSTREAM_ALLOWED_COMMANDS_DEFAULT, ConfigDef.Importance.LOW, XSTREAM_ALLOWED_COMMANDS_DOC)
         .define(XSTREAM_SERVER_NAMES_CONF, ConfigDef.Type.LIST, ConfigDef.Importance.HIGH, XSTREAM_SERVER_NAMES_DOC)
         .define(XSTREAM_BATCH_INTERVAL_CONF, ConfigDef.Type.INT, XStreamOut.DEFAULT_BATCH_INTERVAL, ConfigDef.Importance.MEDIUM, XSTREAM_BATCH_INTERVAL_DOC)
         .define(XSTREAM_IDLE_TIMEOUT_CONF, ConfigDef.Type.INT, XStreamOut.DEFAULT_IDLE_TIMEOUT, ConfigDef.Importance.MEDIUM, XSTREAM_IDLE_TIMEOUT_DOC);
+  }
+
+  @Override
+  public OracleConnectionPoolDataSourceFactory connectionPoolDataSourceFactory() {
+    return new OracleConnectionPoolDataSourceFactory(this);
   }
 }
