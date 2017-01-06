@@ -25,24 +25,23 @@ import oracle.streams.ColumnValue;
 
 import java.io.IOException;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class JsonDatum {
-  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  public static class Storage {
-    @JsonProperty
-    int charset;
+  @JsonProperty
+  int charset;
 
-    @JsonProperty
-    int datumType;
+  @JsonProperty
+  int datumType;
 
-    @JsonProperty
-    byte[] value;
-  }
+  @JsonProperty
+  byte[] value;
 
-  static class DatumSerializer extends JsonSerializer<Datum> {
+
+  static class Serializer extends JsonSerializer<Datum> {
     @Override
     public void serialize(Datum datum, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-      Storage storage = new Storage();
+      JsonDatum storage = new JsonDatum();
       storage.value = datum.getBytes();
 
       if (datum instanceof DATE) {
@@ -70,11 +69,11 @@ class JsonDatum {
     }
   }
 
-  static class DatumDeserializer extends JsonDeserializer<Datum> {
+  static class Deserializer extends JsonDeserializer<Datum> {
 
     @Override
     public Datum deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-      Storage storage = jsonParser.readValueAs(Storage.class);
+      JsonDatum storage = jsonParser.readValueAs(JsonDatum.class);
 
       Datum datum;
 

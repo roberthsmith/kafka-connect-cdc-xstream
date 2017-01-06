@@ -7,8 +7,11 @@ import oracle.sql.Datum;
 public class TestCase {
   static {
     SimpleModule module = new SimpleModule();
-    module.addSerializer(Datum.class, new JsonDatum.DatumSerializer());
-    module.addDeserializer(Datum.class, new JsonDatum.DatumDeserializer());
+    module.addSerializer(Datum.class, new JsonDatum.Serializer());
+    module.addDeserializer(Datum.class, new JsonDatum.Deserializer());
     ObjectMapperFactory.instance.registerModule(module);
+  }
+  public static void init() {
+
   }
 }

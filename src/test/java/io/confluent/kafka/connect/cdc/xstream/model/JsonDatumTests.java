@@ -7,6 +7,7 @@ import oracle.sql.CHAR;
 import oracle.sql.CharacterSet;
 import oracle.sql.Datum;
 import oracle.sql.NUMBER;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -21,6 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class JsonDatumTests {
+
+  @BeforeAll
+  public static void init() {
+    TestCase.init();
+  }
 
   void assertDatum(final Datum expected) throws SQLException, IOException {
     byte[] buffer = ObjectMapperFactory.instance.writeValueAsBytes(expected);

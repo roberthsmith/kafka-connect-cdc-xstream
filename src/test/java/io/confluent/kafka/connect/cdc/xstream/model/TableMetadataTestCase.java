@@ -1,9 +1,9 @@
 package io.confluent.kafka.connect.cdc.xstream.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.NamedTest;
 import io.confluent.kafka.connect.cdc.ObjectMapperFactory;
+import io.confluent.kafka.connect.cdc.TableMetadataProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +16,7 @@ public class TableMetadataTestCase extends TestCase implements NamedTest {
   String databaseName;
   String schemaName;
   String tableName;
-  JsonTableMetadata expected;
+  TableMetadataProvider.TableMetadata expected;
 
   public static void write(File file, TableMetadataTestCase change) throws IOException {
     try (OutputStream outputStream = new FileOutputStream(file)) {
@@ -56,11 +56,11 @@ public class TableMetadataTestCase extends TestCase implements NamedTest {
     this.tableName = value;
   }
 
-  public JsonTableMetadata expected() {
+  public TableMetadataProvider.TableMetadata expected() {
     return this.expected;
   }
 
-  public void expected(JsonTableMetadata value) {
+  public void expected(TableMetadataProvider.TableMetadata value) {
     this.expected = value;
   }
 

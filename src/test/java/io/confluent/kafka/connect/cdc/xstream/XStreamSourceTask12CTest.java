@@ -173,7 +173,7 @@ public class XStreamSourceTask12CTest extends Oracle12cTest {
         OracleChangeTest.ChangeTestCase changeTestCase = new OracleChangeTest.ChangeTestCase();
         changeTestCase.inputRowLCR = expectedJsonLCR;
         changeTestCase.name = parentPath.relativize(testCase.lcrPath).toString();
-        changeTestCase.inputTableMetadata = new JsonTableMetadata();
+//        changeTestCase.inputTableMetadata = new JsonTableMetadata();
 
 
         testCases.add(testCase);

@@ -2,6 +2,7 @@ package io.confluent.kafka.connect.cdc.xstream;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.confluent.kafka.connect.cdc.Change;
 import io.confluent.kafka.connect.cdc.ChangeKey;
 import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JdbcUtils;
@@ -96,8 +97,8 @@ public class OracleChangeTest extends Oracle12cTest {
     @JsonIgnore
     String name;
     JsonRowLCR inputRowLCR;
-    JsonTableMetadata inputTableMetadata;
-    JsonChange expected;
+    TableMetadataProvider.TableMetadata inputTableMetadata;
+    Change expected;
 
     public static void write(File file, ChangeTestCase change) throws IOException {
       try (OutputStream outputStream = new FileOutputStream(file)) {
@@ -137,19 +138,19 @@ public class OracleChangeTest extends Oracle12cTest {
       this.inputRowLCR = value;
     }
 
-    public JsonChange expected() {
+    public Change expected() {
       return this.expected;
     }
 
-    public void expected(JsonChange value) {
+    public void expected(Change value) {
       this.expected = value;
     }
 
-    public JsonTableMetadata inputTableMetadata() {
+    public TableMetadataProvider.TableMetadata inputTableMetadata() {
       return this.inputTableMetadata;
     }
 
-    public void inputTableMetadata(JsonTableMetadata value) {
+    public void inputTableMetadata(TableMetadataProvider.TableMetadata value) {
       this.inputTableMetadata = value;
     }
   }
