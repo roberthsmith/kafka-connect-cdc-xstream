@@ -26,12 +26,12 @@ public class XStreamTestConstants {
     Preconditions.checkNotNull(host, "host cannot be null.");
     Preconditions.checkNotNull(port, "port cannot be null.");
     Map<String, String> settings = new LinkedHashMap<>();
-    settings.put(XStreamSourceConnectorConfig.SERVER_NAME_CONF, host);
-    settings.put(XStreamSourceConnectorConfig.SERVER_PORT_CONF, port.toString());
-    settings.put(XStreamSourceConnectorConfig.INITIAL_DATABASE_CONF, XStreamTestConstants.ORACLE_ROOT_DATABASE);
-    settings.put(XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamTestConstants.XSTREAM_USERNAME_12C);
-    settings.put(XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamTestConstants.XSTREAM_PASSWORD_12C);
-    settings.put(XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, XStreamTestConstants.XSTREAM_OUT_SERVER_NAME);
+    settings.put(OracleSourceConnectorConfig.SERVER_NAME_CONF, host);
+    settings.put(OracleSourceConnectorConfig.SERVER_PORT_CONF, port.toString());
+    settings.put(OracleSourceConnectorConfig.INITIAL_DATABASE_CONF, XStreamTestConstants.ORACLE_ROOT_DATABASE);
+    settings.put(OracleSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamTestConstants.XSTREAM_USERNAME_12C);
+    settings.put(OracleSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamTestConstants.XSTREAM_PASSWORD_12C);
+    settings.put(OracleSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, XStreamTestConstants.XSTREAM_OUT_SERVER_NAME);
     return settings;
   }
 }

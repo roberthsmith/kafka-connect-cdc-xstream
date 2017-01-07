@@ -24,36 +24,36 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class XStreamSourceConnectorTest {
-  public XStreamSourceConnector xStreamSourceConnector;
+public class OracleSourceConnectorTest {
+  public OracleSourceConnector oracleSourceConnector;
   Map<String, String> settings;
 
   @BeforeEach
   public void setup() {
-    this.xStreamSourceConnector = new XStreamSourceConnector();
+    this.oracleSourceConnector = new OracleSourceConnector();
     this.settings = XStreamTestConstants.settings("localhost", 1521);
   }
 
   @Test
   public void start() {
-    this.xStreamSourceConnector.start(this.settings);
+    this.oracleSourceConnector.start(this.settings);
   }
 
   @Test
   public void stop() {
-    this.xStreamSourceConnector.start(this.settings);
-    this.xStreamSourceConnector.stop();
+    this.oracleSourceConnector.start(this.settings);
+    this.oracleSourceConnector.stop();
   }
 
   @Test
   public void taskClass() {
-    assertEquals(XStreamSourceTask.class, this.xStreamSourceConnector.taskClass());
+    assertEquals(OracleSourceTask.class, this.oracleSourceConnector.taskClass());
   }
 
   @Test
   public void taskConfigs() {
-    this.xStreamSourceConnector.start(this.settings);
-    List<Map<String, String>> taskConfigs = this.xStreamSourceConnector.taskConfigs(10);
+    this.oracleSourceConnector.start(this.settings);
+    List<Map<String, String>> taskConfigs = this.oracleSourceConnector.taskConfigs(10);
     assertNotNull(taskConfigs);
     assertEquals(1, taskConfigs.size());
     assertEquals(this.settings, taskConfigs.get(0));
@@ -61,7 +61,7 @@ public class XStreamSourceConnectorTest {
 
   @Test
   public void version() {
-    assertNotNull(this.xStreamSourceConnector.version());
+    assertNotNull(this.oracleSourceConnector.version());
   }
 
 }

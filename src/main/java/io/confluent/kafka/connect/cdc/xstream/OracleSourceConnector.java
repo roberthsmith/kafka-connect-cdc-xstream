@@ -25,19 +25,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XStreamSourceConnector extends CDCSourceConnector {
+public class OracleSourceConnector extends CDCSourceConnector {
   Map<String, String> settings;
-  XStreamSourceConnectorConfig config;
+  OracleSourceConnectorConfig config;
 
   @Override
   public void start(Map<String, String> map) {
-    this.config = new XStreamSourceConnectorConfig(map);
+    this.config = new OracleSourceConnectorConfig(map);
     this.settings = map;
   }
 
   @Override
   public Class<? extends Task> taskClass() {
-    return XStreamSourceTask.class;
+    return OracleSourceTask.class;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class XStreamSourceConnector extends CDCSourceConnector {
     for (String xStreamServerName : this.config.xStreamServerNames) {
       Map<String, String> taskConfig = new LinkedHashMap<>();
       taskConfig.putAll(this.settings);
-      taskConfig.put(XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, xStreamServerName);
+      taskConfig.put(OracleSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, xStreamServerName);
       taskConfigs.add(taskConfig);
     }
 
@@ -68,6 +68,6 @@ public class XStreamSourceConnector extends CDCSourceConnector {
 
   @Override
   public ConfigDef config() {
-    return XStreamSourceConnectorConfig.config();
+    return OracleSourceConnectorConfig.config();
   }
 }

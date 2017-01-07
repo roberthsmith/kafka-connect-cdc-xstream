@@ -32,7 +32,7 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(OracleSettingsExtension.class)
 public class Oracle12cTableMetadataProviderTest extends Oracle12cTest {
   Oracle12cTableMetadataProvider tableMetadataProvider;
-  XStreamSourceConnectorConfig config;
+  OracleSourceConnectorConfig config;
   OffsetStorageReader offsetStorageReader;
 
 
@@ -41,7 +41,7 @@ public class Oracle12cTableMetadataProviderTest extends Oracle12cTest {
       @OracleSettings
           Map<String, String> settings
   ) {
-    this.config = new XStreamSourceConnectorConfig(settings);
+    this.config = new OracleSourceConnectorConfig(settings);
     this.offsetStorageReader = mock(OffsetStorageReader.class);
     this.tableMetadataProvider = new Oracle12cTableMetadataProvider(this.config, this.offsetStorageReader);
   }

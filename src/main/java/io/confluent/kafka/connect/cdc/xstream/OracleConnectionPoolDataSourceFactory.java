@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 class OracleConnectionPoolDataSourceFactory implements ConnectionPoolDataSourceFactory {
   private static final Logger log = LoggerFactory.getLogger(OracleConnectionPoolDataSourceFactory.class);
-  private final XStreamSourceConnectorConfig config;
+  private final OracleSourceConnectorConfig config;
 
-  public OracleConnectionPoolDataSourceFactory(XStreamSourceConnectorConfig config) {
+  public OracleConnectionPoolDataSourceFactory(OracleSourceConnectorConfig config) {
     this.config = config;
   }
 

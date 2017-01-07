@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStreamSourceConnectorConfig> {
+class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<OracleSourceConnectorConfig> {
   static final String PRIMARY_KEY_SQL = "SELECT " +
       "  cols.table_name, " +
       "  cols.column_name, " +
@@ -118,7 +118,7 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     typeLookup = ImmutableMap.copyOf(map);
   }
 
-  public Oracle12cTableMetadataProvider(XStreamSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
+  public Oracle12cTableMetadataProvider(OracleSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
     super(config, offsetStorageReader);
   }
 

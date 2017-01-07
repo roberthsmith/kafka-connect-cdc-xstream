@@ -4,20 +4,20 @@ import org.junit.jupiter.api.Disabled;
 
 @Disabled
 public class XStreamSourceTask11GTest extends Oracle11gTest {
-//  XStreamSourceTask xStreamSourceTask;
+//  OracleSourceTask xStreamSourceTask;
 //
 //  @BeforeEach
 //  public void before(
 //      @DockerFormatString(container = XStreamTestConstants.ORACLE_CONTAINER, port = XStreamTestConstants.ORACLE_PORT, format = XStreamTestConstants.JDBC_URL_FORMAT_11G) String jdbcUrl
 //  ) {
 //    Map<String, String> settings = ImmutableMap.of(
-//        XStreamSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
-//        XStreamSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamTestConstants.XSTREAM_USERNAME_12C,
-//        XStreamSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamTestConstants.XSTREAM_PASSWORD_12C,
-//        XStreamSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
+//        OracleSourceConnectorConfig.JDBC_URL_CONF, jdbcUrl,
+//        OracleSourceConnectorConfig.JDBC_USERNAME_CONF, XStreamTestConstants.XSTREAM_USERNAME_12C,
+//        OracleSourceConnectorConfig.JDBC_PASSWORD_CONF, XStreamTestConstants.XSTREAM_PASSWORD_12C,
+//        OracleSourceConnectorConfig.XSTREAM_SERVER_NAMES_CONF, "xout"
 //    );
 //
-//    this.xStreamSourceTask = new XStreamSourceTask();
+//    this.xStreamSourceTask = new OracleSourceTask();
 //
 //    SourceTaskContext context = mock(SourceTaskContext.class);
 //    OffsetStorageReader offsetStorageReader = mock(OffsetStorageReader.class);

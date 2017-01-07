@@ -6,8 +6,6 @@ import io.confluent.kafka.connect.cdc.Change;
 import io.confluent.kafka.connect.cdc.ChangeKey;
 import io.confluent.kafka.connect.cdc.Integration;
 import io.confluent.kafka.connect.cdc.JdbcUtils;
-import io.confluent.kafka.connect.cdc.JsonChange;
-import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.NamedTest;
 import io.confluent.kafka.connect.cdc.ObjectMapperFactory;
 import io.confluent.kafka.connect.cdc.TableMetadataProvider;
@@ -55,14 +53,14 @@ public class OracleChangeTest extends Oracle12cTest {
   private static final Logger log = LoggerFactory.getLogger(OracleChangeTest.class);
 
   PooledConnection connection;
-  XStreamSourceConnectorConfig config;
+  OracleSourceConnectorConfig config;
 
   @BeforeEach
   public void config(
       @OracleSettings
           Map<String, String> settings
   ) throws SQLException {
-    this.config = new XStreamSourceConnectorConfig(settings);
+    this.config = new OracleSourceConnectorConfig(settings);
     this.connection = JdbcUtils.openPooledConnection(this.config, new ChangeKey(XStreamTestConstants.ORACLE_PDB_DATABASE, null, null));
   }
 

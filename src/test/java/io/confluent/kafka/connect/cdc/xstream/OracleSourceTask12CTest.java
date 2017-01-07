@@ -5,7 +5,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import io.confluent.kafka.connect.cdc.ChangeKey;
 import io.confluent.kafka.connect.cdc.Integration;
-import io.confluent.kafka.connect.cdc.JsonTableMetadata;
 import io.confluent.kafka.connect.cdc.docker.DockerCompose;
 import io.confluent.kafka.connect.cdc.xstream.docker.Oracle12cClusterHealthCheck;
 import io.confluent.kafka.connect.cdc.xstream.docker.OracleSettings;
@@ -39,9 +38,9 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @Category(Integration.class)
 @DockerCompose(dockerComposePath = Oracle12cTest.DOCKER_COMPOSE_FILE, clusterHealthCheck = Oracle12cClusterHealthCheck.class)
-public class XStreamSourceTask12CTest extends Oracle12cTest {
-  private static Logger log = LoggerFactory.getLogger(XStreamSourceTask12CTest.class);
-  XStreamSourceConnectorConfig config;
+public class OracleSourceTask12CTest extends Oracle12cTest {
+  private static Logger log = LoggerFactory.getLogger(OracleSourceTask12CTest.class);
+  OracleSourceConnectorConfig config;
   OracleConnection oracleConnection;
   XStreamOutput xStreamOutput;
 
@@ -51,7 +50,7 @@ public class XStreamSourceTask12CTest extends Oracle12cTest {
       @OracleSettings
           Map<String, String> settings
   ) throws StreamsException, InterruptedException {
-    this.config = new XStreamSourceConnectorConfig(settings);
+    this.config = new OracleSourceConnectorConfig(settings);
     this.oracleConnection = OracleUtils.openUnPooledConnection(this.config);
     this.xStreamOutput = XStreamOutputImpl.attach(this.oracleConnection, this.config, null);
   }

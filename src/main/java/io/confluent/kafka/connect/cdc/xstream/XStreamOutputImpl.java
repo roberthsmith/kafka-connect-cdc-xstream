@@ -25,7 +25,7 @@ class XStreamOutputImpl implements XStreamOutput {
     this.connection = connection;
   }
 
-  public static XStreamOutput attach(OracleConnection connection, XStreamSourceConnectorConfig config, byte[] position) throws StreamsException {
+  public static XStreamOutput attach(OracleConnection connection, OracleSourceConnectorConfig config, byte[] position) throws StreamsException {
     String server = config.xStreamServerNames.get(0);
     if (log.isInfoEnabled()) {
       log.info("Attaching to xStream output '{}'", server);

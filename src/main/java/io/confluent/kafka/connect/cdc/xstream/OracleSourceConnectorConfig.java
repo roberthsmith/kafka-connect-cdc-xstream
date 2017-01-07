@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class XStreamSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleConnectionPoolDataSourceFactory> {
+public class OracleSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleConnectionPoolDataSourceFactory> {
 
 
   public static final String XSTREAM_SERVER_NAMES_CONF = "oracle.xstream.server.names";
@@ -48,7 +48,7 @@ public class XStreamSourceConnectorConfig extends PooledCDCSourceConnectorConfig
   public final int xStreamReceiveWait;
   public final Set<String> allowedCommands;
 
-  public XStreamSourceConnectorConfig(Map<?, ?> parsedConfig) {
+  public OracleSourceConnectorConfig(Map<?, ?> parsedConfig) {
     super(config(), parsedConfig);
     this.xStreamReceiveWait = this.getInt(XSTREAM_RECEIVE_WAIT_CONF);
     this.allowedCommands = ImmutableSet.copyOf(this.getList(XSTREAM_ALLOWED_COMMANDS_CONF));

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 class QueryService extends AbstractExecutionThreadService {
   private static final Logger log = LoggerFactory.getLogger(QueryService.class);
-  final XStreamSourceConnectorConfig config;
+  final OracleSourceConnectorConfig config;
   final OffsetStorageReader offsetStorageReader;
   final ChangeWriter changeWriter;
   OracleChange.Builder oracleChangeBuilder;
@@ -29,7 +29,7 @@ class QueryService extends AbstractExecutionThreadService {
   TableMetadataProvider tableMetadataProvider;
   CountDownLatch finished = new CountDownLatch(1);
 
-  QueryService(XStreamSourceConnectorConfig config, OffsetStorageReader offsetStorageReader, ChangeWriter changeWriter) {
+  QueryService(OracleSourceConnectorConfig config, OffsetStorageReader offsetStorageReader, ChangeWriter changeWriter) {
     this.config = config;
     this.offsetStorageReader = offsetStorageReader;
     this.changeWriter = changeWriter;

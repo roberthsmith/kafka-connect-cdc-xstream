@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.Map;
 
-class Oracle11gTableMetadataProvider extends CachingTableMetadataProvider<XStreamSourceConnectorConfig> {
+class Oracle11gTableMetadataProvider extends CachingTableMetadataProvider<OracleSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(Oracle11gTableMetadataProvider.class);
 
-  public Oracle11gTableMetadataProvider(XStreamSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
+  public Oracle11gTableMetadataProvider(OracleSourceConnectorConfig config, OffsetStorageReader offsetStorageReader) {
     super(config, offsetStorageReader);
   }
 

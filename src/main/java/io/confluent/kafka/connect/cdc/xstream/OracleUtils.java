@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-public class OracleUtils {
+class OracleUtils {
   private static final Logger log = LoggerFactory.getLogger(OracleUtils.class);
 
-  public static OracleConnection openUnPooledConnection(XStreamSourceConnectorConfig config) {
+  public static OracleConnection openUnPooledConnection(OracleSourceConnectorConfig config) {
     try {
       return (OracleConnection) JdbcUtils.openPooledConnection(config, null).getConnection();
     } catch (UnsatisfiedLinkError ex) {

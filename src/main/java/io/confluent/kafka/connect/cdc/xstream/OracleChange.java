@@ -129,11 +129,11 @@ class OracleChange implements Change {
   }
 
   public static class Builder {
-    final XStreamSourceConnectorConfig config;
+    final OracleSourceConnectorConfig config;
     final XStreamOutput xStreamOutput;
     final TableMetadataProvider tableMetadataProvider;
 
-    public Builder(XStreamSourceConnectorConfig config, XStreamOutput xStreamOutput, TableMetadataProvider tableMetadataProvider) {
+    public Builder(OracleSourceConnectorConfig config, XStreamOutput xStreamOutput, TableMetadataProvider tableMetadataProvider) {
       this.config = config;
       this.xStreamOutput = xStreamOutput;
       this.tableMetadataProvider = tableMetadataProvider;

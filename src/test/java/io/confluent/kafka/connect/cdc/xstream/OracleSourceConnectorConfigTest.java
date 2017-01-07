@@ -18,13 +18,13 @@ package io.confluent.kafka.connect.cdc.xstream;
 import io.confluent.kafka.connect.utils.config.MarkdownFormatter;
 import org.junit.jupiter.api.Test;
 
-public class XStreamSourceConnectorConfigTest {
+public class OracleSourceConnectorConfigTest {
 
 
   @Test
   public void doc() {
     System.out.println(
-        MarkdownFormatter.toMarkdown(XStreamSourceConnectorConfig.config())
+        MarkdownFormatter.toMarkdown(OracleSourceConnectorConfig.config())
     );
   }
 }

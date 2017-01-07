@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(OracleSettingsExtension.class)
 public class QueryServiceTest extends Oracle12cTest {
   private static final Logger log = LoggerFactory.getLogger(QueryServiceTest.class);
-  XStreamSourceConnectorConfig config;
+  OracleSourceConnectorConfig config;
   OffsetStorageReader offsetStorageReader;
   QueryService queryService;
   ChangeWriter changeWriter;
@@ -47,7 +47,7 @@ public class QueryServiceTest extends Oracle12cTest {
   public void setup(
       @OracleSettings Map<String, String> settings
   ) throws Exception {
-    this.config = new XStreamSourceConnectorConfig(settings);
+    this.config = new OracleSourceConnectorConfig(settings);
     this.offsetStorageReader = mock(OffsetStorageReader.class);
     this.changeWriter = mock(ChangeWriter.class);
     this.queryService = new QueryService(this.config, this.offsetStorageReader, this.changeWriter);
