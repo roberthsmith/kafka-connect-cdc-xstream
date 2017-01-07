@@ -339,7 +339,7 @@ class Oracle12cTableMetadataProvider extends CachingTableMetadataProvider<XStrea
     return tableMetadata;
   }
 
-  class OracleTableMetadata implements TableMetadata {
+  static class OracleTableMetadata implements TableMetadata {
     String databaseName;
     String schemaName;
     String tableName;

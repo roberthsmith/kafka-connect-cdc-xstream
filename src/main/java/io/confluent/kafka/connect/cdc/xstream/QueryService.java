@@ -115,7 +115,9 @@ class QueryService extends AbstractExecutionThreadService {
     if (log.isInfoEnabled()) {
       log.info("Shutting down. Waiting for loop to complete.");
     }
-    finished.await(60, TimeUnit.SECONDS);
+    if(!finished.await(60, TimeUnit.SECONDS)){
+      log.warn("Took over {} seconds to shutdown.", 60);
+    }
     this.xStreamOutput.detach();
     JdbcUtils.closeConnection(this.connection);
   }
