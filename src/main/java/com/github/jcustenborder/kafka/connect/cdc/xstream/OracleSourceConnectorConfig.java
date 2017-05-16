@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class OracleSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleConnectionPoolDataSourceFactory> {
+class OracleSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleConnectionPoolDataSourceFactory> {
 
 
   public static final String XSTREAM_SERVER_NAMES_CONF = "oracle.xstream.server.names";
