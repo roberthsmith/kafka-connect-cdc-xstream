@@ -5,12 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.confluent" level="DEBUG" />
-    <logger name="com.github.jcustenborder.kafka.connect.cdc.xstream.OracleChange" level="TRACE" />
-    <logger name="com.github.jcustenborder.kafka.connect.cdc.xstream.Oracle12cTableMetadataProvider" level="TRACE" />
-    <logger name="com.github.jcustenborder.kafka.connect.cdc.xstream.QueryService" level="TRACE" />
-    <logger name="com.github.jcustenborder.kafka.connect.cdc.JdbcUtils" level="TRACE" />
-    <logger name="io.confluent.kafka.connect.cdc.xstream.OracleConnectionPoolDataSourceFactory" level="TRACE" />
+    <logger name="com.github.jcustenborder.kafka.connect.cdc" level="TRACE" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
