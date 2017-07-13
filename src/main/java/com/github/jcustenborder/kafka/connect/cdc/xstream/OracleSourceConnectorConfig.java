@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,8 @@
  */
 package com.github.jcustenborder.kafka.connect.cdc.xstream;
 
-import com.google.common.collect.ImmutableSet;
 import com.github.jcustenborder.kafka.connect.cdc.PooledCDCSourceConnectorConfig;
+import com.google.common.collect.ImmutableSet;
 import oracle.streams.RowLCR;
 import oracle.streams.XStreamOut;
 import org.apache.kafka.common.config.ConfigDef;
@@ -41,7 +41,7 @@ class OracleSourceConnectorConfig extends PooledCDCSourceConnectorConfig<OracleC
   static final String XSTREAM_RECEIVE_WAIT_DOC = "The amount of time to wait in milliseconds when XStreamOut.receiveChange() returns null";
   static final String XSTREAM_ALLOWED_COMMANDS_DOC = "The commands the task should process.";
   static final int XSTREAM_RECEIVE_WAIT_DEFAULT = 1000;
-  static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE);
+  static final List<String> XSTREAM_ALLOWED_COMMANDS_DEFAULT = Arrays.asList(RowLCR.INSERT, RowLCR.UPDATE, RowLCR.DELETE);
   public final List<String> xStreamServerNames;
   public final int xStreamBatchInterval;
   public final int xStreamIdleTimeout;

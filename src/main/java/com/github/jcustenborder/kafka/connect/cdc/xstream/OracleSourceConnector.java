@@ -15,6 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.cdc.xstream;
 
+import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.google.common.base.Preconditions;
 import com.github.jcustenborder.kafka.connect.cdc.CDCSourceConnector;
 import org.apache.kafka.common.config.ConfigDef;
@@ -25,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Description("The OracleSourceConnector leverages the [Oracle XStream](https://docs.oracle.com/database/121/XSTRM/xstrm_intro.htm#XSTRM72647) " +
+    "API to stream changes from an Oracle instance in real time.")
 public class OracleSourceConnector extends CDCSourceConnector {
   Map<String, String> settings;
   OracleSourceConnectorConfig config;
